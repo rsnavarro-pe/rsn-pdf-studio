@@ -54,6 +54,16 @@ export const state = {
     revBName: '',
     opacity: 0.6,
   },
+
+  // Page Layout & Split View (Single/Two-Page Spread & No Split/Vertical/Horizontal Split)
+  layout: {
+    pageMode: 'single', // 'single' | 'two-page'
+    firstPageAlone: true,
+    splitMode: 'none', // 'none' | 'vertical' | 'horizontal'
+    syncScrollZoom: true,
+    splitPage: 1,
+    drawBarOpen: false,
+  },
 };
 
 const listeners = new Set();

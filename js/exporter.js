@@ -34,7 +34,7 @@ export async function exportAnnotatedPdf() {
     const sw = m.lineWidth || 2;
     const toPdfY = (y) => height - y;
 
-    if (['distance', 'arrow', 'callout', 'underline', 'strike'].includes(m.type) && m.points.length >= 2) {
+    if (['distance', 'arrow', 'callout', 'underline', 'strike', 'line'].includes(m.type) && m.points.length >= 2) {
       const [a, b] = m.points;
       const fSize = m.fontSize || 11;
       const arrSize = m.arrowSize || 11;
@@ -66,18 +66,35 @@ export async function exportAnnotatedPdf() {
           page.drawText(label, { x: (a.x + b.x) / 2, y: toPdfY((a.y + b.y) / 2) + 6, size: 10, font, color });
         }
       }
-    } else if (m.type === 'perimeter' && m.points.length >= 2) {
+    } else if ((m.type === 'perimeter' || m.type === 'polyline') && m.points.length >= 2) {
       drawPoly(page, m.points, toPdfY, sw, color, false);
-      const last = m.points[m.points.length - 1];
-      page.drawText(formatLength(polylineLength(m.points), state.unitsPerPt, state.unit), {
-        x: last.x, y: toPdfY(last.y) + 6, size: 10, font, color,
-      });
-    } else if ((m.type === 'area' || m.type === 'cutout') && m.points.length >= 3) {
+      if (m.type === 'perimeter') {
+        const last = m.points[m.points.length - 1];
+        page.drawText(formatLength(polylineLength(m.points), state.unitsPerPt, state.unit), {
+          x: last.x, y: toPdfY(last.y) + 6, size: 10, font, color,
+        });
+      }
+    } else if ((m.type === 'area' || m.type === 'cutout' || m.type === 'polygon') && m.points.length >= 3) {
       drawPoly(page, m.points, toPdfY, sw, color, true);
-      const cx = m.points.reduce((s, p) => s + p.x, 0) / m.points.length;
-      const cy = m.points.reduce((s, p) => s + p.y, 0) / m.points.length;
-      const prefix = m.type === 'cutout' ? '-' : '';
-      page.drawText(`${prefix}${formatArea(polygonArea(m.points), state.unitsPerPt, state.unit)}`, { x: cx - 20, y: toPdfY(cy), size: 10, font, color });
+      if (m.type !== 'polygon') {
+        const cx = m.points.reduce((s, p) => s + p.x, 0) / m.points.length;
+        const cy = m.points.reduce((s, p) => s + p.y, 0) / m.points.length;
+        const prefix = m.type === 'cutout' ? '-' : '';
+        page.drawText(`${prefix}${formatArea(polygonArea(m.points), state.unitsPerPt, state.unit)}`, { x: cx - 20, y: toPdfY(cy), size: 10, font, color });
+      }
+    } else if (m.type === 'ellipse' && m.points.length >= 2) {
+      const [a, b] = m.points;
+      const hasFill = Number(m.fillOpacity) > 0;
+      page.drawEllipse({
+        x: (a.x + b.x) / 2,
+        y: toPdfY((a.y + b.y) / 2),
+        xScale: Math.max(2, Math.abs(b.x - a.x) / 2),
+        yScale: Math.max(2, Math.abs(b.y - a.y) / 2),
+        borderColor: color,
+        borderWidth: sw,
+        color: hasFill ? hexToRgb(m.fillColor || m.color, rgb) : undefined,
+        opacity: hasFill ? Number(m.fillOpacity) : undefined,
+      });
     } else if ((m.type === 'pen' || m.type === 'highlight') && m.points.length >= 2) {
       const isHi = m.type === 'highlight';
       const hiColor = isHi ? hexToRgb(m.color || '#facc15', rgb) : color;

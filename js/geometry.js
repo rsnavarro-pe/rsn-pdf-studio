@@ -142,7 +142,7 @@ export function hitTestMarkup(markup, pt, tol = 8) {
     return distPt(pts[0], pt) <= Math.max(tol, 24);
   }
 
-  if (['rect', 'cloud', 'redact', 'sign', 'edittext'].includes(markup.type) && pts.length >= 2) {
+  if (['rect', 'cloud', 'redact', 'sign', 'edittext', 'ellipse'].includes(markup.type) && pts.length >= 2) {
     const minX = Math.min(pts[0].x, pts[1].x) - tol;
     const maxX = Math.max(pts[0].x, pts[1].x) + tol;
     const minY = Math.min(pts[0].y, pts[1].y) - tol;
@@ -161,7 +161,7 @@ export function hitTestMarkup(markup, pt, tol = 8) {
   for (let i = 1; i < pts.length; i++) {
     if (pointToSegmentDist(pt, pts[i - 1], pts[i]) <= tol) return true;
   }
-  if ((markup.type === 'area' || markup.type === 'cutout') && pts.length >= 3) {
+  if ((markup.type === 'area' || markup.type === 'cutout' || markup.type === 'polygon') && pts.length >= 3) {
     if (pointInPolygon(pt, pts)) return true;
   }
   return false;

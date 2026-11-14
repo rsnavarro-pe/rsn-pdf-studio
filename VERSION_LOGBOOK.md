@@ -15,6 +15,13 @@ This logbook tracks bi-weekly upstream checks against open-source PDF & CAD refe
 
 ## Release & Integration History
 
+### `v1.6.0` — 2026-11-14 (Draw Sub-Toolbar, Single/Two-Page Spreads & Vertical/Horizontal Split View)
+- **New Features Integrated:**
+  - **Dedicated Draw Toolbar (`#draw-subtoolbar`, `✏ Draw`):** Added full drawing and shape suite matching PDFCraft/OpenPDF Studio (`Pen`, `Highlighter`, `Eraser`, `Callout`, `Polyline`, `Polygon`, `Revision Cloud`, `Rectangle`, `Circle/Ellipse`, `Straight Line`, and `Arrow`) with full SVG rendering and native `pdf-lib` export (`js/overlay-draw.js`, `js/overlay.js`, `js/exporter.js`).
+  - **Layout Options Panel (`◫ Layout` Tab & Button):**
+    - **Page Layout:** Switch between **Single Page** (`📄`) and **Two Page** (`📖`) side-by-side book spread views, plus **Show first page alone** cover-page toggle (`js/layout-view.js`).
+    - **Split View:** Switch between **No Split** (`▭`), **Vertical Split** (`◫` side-by-side panes), and **Horizontal Split** (`⊟` top-and-bottom panes) with dual mini-page preview cards, **Change** document/page selectors, **Swap (`⇄`)**, and **Sync scroll and zoom**.
+
 ### `v1.5.0` — 2026-11-14 (Smart In-Place PDF Text Editor & Typo Fixer)
 - **New Features Integrated:**
   - **Edit Existing PDF Text (`edittext`, Shortcut `E`):** Click any text in an open PDF to automatically detect its font family (`Helvetica` / `Courier` / `Times`), bold/italic weight, exact point size (`pt`), ink color, paper background color, and text opacity (`js/text-edit.js`).

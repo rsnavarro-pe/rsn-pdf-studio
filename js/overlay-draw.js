@@ -35,7 +35,7 @@ export function drawMarkupSvg(svgEl, m, toScreen, state, isSelected, isDraft = f
   const arrStyle = m.arrowHead || state.arrowHead || 'closed';
   const arrSize = (m.arrowSize || state.arrowSize || 11) * state.zoom;
 
-  if (['distance', 'calibrate', 'arrow', 'callout', 'underline', 'strike'].includes(m.type)) {
+  if (['distance', 'calibrate', 'arrow', 'callout', 'underline', 'strike', 'line'].includes(m.type)) {
     const [a, b] = pts;
     if (m.type === 'callout') {
       for (let i = 1; i < pts.length; i++) {
@@ -70,25 +70,39 @@ export function drawMarkupSvg(svgEl, m, toScreen, state, isSelected, isDraft = f
         drawBadge(g, (a.x + b.x) / 2, (a.y + b.y) / 2 - 10, lbl, stroke);
       }
     }
-  } else if (m.type === 'perimeter') {
+  } else if (m.type === 'perimeter' || m.type === 'polyline') {
     const d = pts.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
-    g.appendChild(createSvg('path', { d, fill: 'none', stroke, 'stroke-width': sw }));
-    const last = pts[pts.length - 1];
-    drawBadge(g, last.x, last.y - 10, formatLength(polylineLength(m.points), state.unitsPerPt, state.unit), stroke);
-  } else if (m.type === 'area' || m.type === 'cutout') {
+    g.appendChild(createSvg('path', { d, fill: 'none', stroke, 'stroke-width': sw, 'stroke-dasharray': dash }));
+    if (m.type === 'perimeter') {
+      const last = pts[pts.length - 1];
+      drawBadge(g, last.x, last.y - 10, formatLength(polylineLength(m.points), state.unitsPerPt, state.unit), stroke);
+    }
+  } else if (m.type === 'area' || m.type === 'cutout' || m.type === 'polygon') {
     const isCut = m.type === 'cutout';
+    const isPoly = m.type === 'polygon';
     const d = pts.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ') + ' Z';
     g.appendChild(createSvg('path', {
-      d, fill: isCut ? '#ffffff' : stroke, 'fill-opacity': isCut ? '0.65' : '0.18',
-      stroke, 'stroke-width': sw, 'stroke-dasharray': isCut ? '6,4' : '',
+      d, fill: isCut ? '#ffffff' : (isPoly ? fillCol : stroke),
+      'fill-opacity': isCut ? '0.65' : (isPoly ? fillOp : '0.18'),
+      stroke, 'stroke-width': sw, 'stroke-dasharray': isCut ? '6,4' : dash,
     }));
-    const cx = pts.reduce((s, p) => s + p.x, 0) / pts.length;
-    const cy = pts.reduce((s, p) => s + p.y, 0) / pts.length;
-    const areaPt = polygonArea(m.points);
-    const lbl = isCut
-      ? `-${formatArea(areaPt, state.unitsPerPt, state.unit)} (Cutout)`
-      : `${formatArea(areaPt, state.unitsPerPt, state.unit)} (P: ${formatLength(polygonPerimeter(m.points), state.unitsPerPt, state.unit)})`;
-    drawBadge(g, cx, cy, lbl, stroke);
+    if (!isPoly) {
+      const cx = pts.reduce((s, p) => s + p.x, 0) / pts.length;
+      const cy = pts.reduce((s, p) => s + p.y, 0) / pts.length;
+      const areaPt = polygonArea(m.points);
+      const lbl = isCut
+        ? `-${formatArea(areaPt, state.unitsPerPt, state.unit)} (Cutout)`
+        : `${formatArea(areaPt, state.unitsPerPt, state.unit)} (P: ${formatLength(polygonPerimeter(m.points), state.unitsPerPt, state.unit)})`;
+      drawBadge(g, cx, cy, lbl, stroke);
+    }
+  } else if (m.type === 'ellipse' && pts.length >= 2) {
+    const [a, b] = pts;
+    const cx = (a.x + b.x) / 2, cy = (a.y + b.y) / 2;
+    const rx = Math.max(2, Math.abs(b.x - a.x) / 2), ry = Math.max(2, Math.abs(b.y - a.y) / 2);
+    g.appendChild(createSvg('ellipse', {
+      cx, cy, rx, ry, fill: fillCol, 'fill-opacity': fillOp,
+      stroke, 'stroke-width': sw, 'stroke-dasharray': dash,
+    }));
   } else if (m.type === 'pen' || m.type === 'highlight') {
     const d = pts.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
     const isHi = m.type === 'highlight';

@@ -20,6 +20,7 @@ import { scheduleAutoSave, restoreLastSession, exportProjectJson, importProjectJ
 import { initMarkupProps } from './markup-props.js';
 import { initSignatureModal } from './signature.js';
 import { initWorkbenchUI, recordRecentFile, clearWorkbenchForce } from './workbench-ui.js';
+import { initLayoutView, getSpreadCompanionPage } from './layout-view.js';
 import { renderUI } from './ui.js';
 
 let pendingCalibratePtSpan = 0;
@@ -38,6 +39,7 @@ async function init() {
   bindKeyboardShortcuts();
   initPdfTools();
   initSignatureModal();
+  initLayoutView();
   initWorkbenchUI(async () => {
     if (!state.pdfBytes) {
       const bytes = await generateSamplePdfBytes(false);
@@ -146,10 +148,19 @@ function bindToolEvents() {
 
 function bindNavigationEvents() {
   document.getElementById('btn-prev-page').addEventListener('click', async () => {
-    if (state.currentPage > 1) { state.currentPage--; await renderCurrentPage(); }
+    if (state.currentPage > 1) {
+      const step = state.layout.pageMode === 'two-page' && !(state.layout.firstPageAlone && state.currentPage <= 2) ? 2 : 1;
+      state.currentPage = Math.max(1, state.currentPage - step);
+      await renderCurrentPage();
+    }
   });
   document.getElementById('btn-next-page').addEventListener('click', async () => {
-    if (state.currentPage < state.numPages) { state.currentPage++; await renderCurrentPage(); }
+    if (state.currentPage < state.numPages) {
+      const comp = getSpreadCompanionPage(state.currentPage, state.numPages);
+      const step = comp ? 2 : 1;
+      state.currentPage = Math.min(state.numPages, state.currentPage + step);
+      await renderCurrentPage();
+    }
   });
   document.getElementById('btn-zoom-in').addEventListener('click', async () => {
     state.zoom = Math.min(12, +(state.zoom * 1.25).toFixed(3));

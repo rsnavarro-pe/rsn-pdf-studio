@@ -76,7 +76,9 @@
                   <button type="button" class="craft-dd-item tool-btn" data-tool="strike"><span class="dd-ico" style="color:#f87171"><s>S</s></span>Strikethrough Text</button>
                   <button type="button" class="craft-dd-item tool-btn" data-tool="note"><span class="dd-ico" style="color:#fbbf24">📌</span>Sticky Note Comment <kbd>N</kbd></button>
                   <button type="button" class="craft-dd-item tool-btn" data-tool="rect"><span class="dd-ico" style="color:#60a5fa">▭</span>Rectangle Box</button>
-                  <button type="button" class="craft-dd-item tool-btn" data-tool="pen"><span class="dd-ico" style="color:#a78bfa">✎</span>Freehand Pen</button>
+                  <button type="button" class="craft-dd-item tool-btn" data-tool="ellipse"><span class="dd-ico" style="color:#38bdf8">◯</span>Circle / Ellipse</button>
+                  <button type="button" class="craft-dd-item tool-btn" data-tool="polygon"><span class="dd-ico" style="color:#4ade80">⬠</span>Polygon / Polyline Shape</button>
+                  <button type="button" class="craft-dd-item tool-btn" data-tool="pen"><span class="dd-ico" style="color:#a78bfa">✎</span>Freehand Draw &amp; Eraser Toolbar</button>
                   <button type="button" class="craft-dd-item" data-open-hub="ORGANIZE"><span class="dd-ico" style="color:#4ade80">⊞</span>Organize, Rotate &amp; Split Pages...</button>
                 </div>
               </div>
@@ -182,6 +184,9 @@
       <!-- Slim Contextual Canvas Bar (Hidden on Welcome Workbench; Shown only when editing a PDF) -->
       <nav id="slim-canvas-bar" class="slim-canvas-bar hidden" aria-label="Canvas Quick Controls">
         <div class="slim-bar-left">
+          <button type="button" id="btn-layout-tab" class="btn-icon btn-sm" title="Layout Options (Single / Two-Page &amp; Vertical / Horizontal Split)">◫ Layout</button>
+          <button type="button" id="btn-draw-bar-toggle" class="btn-icon btn-sm" title="Toggle Draw Toolbar (Pen, Highlighter, Eraser, Callout, Polyline, Polygon, Shapes, Arrow)">✏ Draw</button>
+          <span class="slim-sep"></span>
           <span id="active-tool-pill" class="active-tool-pill">Tool: Select</span>
           <button class="btn-icon btn-sm tool-btn active" data-tool="select" title="Select (V)">↖ Select</button>
           <button class="btn-icon btn-sm tool-btn" data-tool="pan" title="Pan (H)">✥ Pan</button>
@@ -218,17 +223,34 @@
           <div class="lcd-readout" title="Zoom Level"><span class="lcd-label">ZOOM</span><span id="lcd-zoom" class="lcd-value">100%</span></div>
         </div>
       </nav>
+
+      <!-- Dedicated Draw Sub-Toolbar (matches reference screenshot: Pen, Highlighter, Eraser | Callout, Polyline, Polygon, Cloud, Rectangle, Ellipse, Line, Arrow) -->
+      <div id="draw-subtoolbar" class="draw-subtoolbar hidden" role="toolbar" aria-label="Draw Tools">
+        <button type="button" class="draw-tool-btn tool-btn" data-tool="pen" title="Freehand Pen / Ink">✒<span>Pen</span></button>
+        <button type="button" class="draw-tool-btn tool-btn" data-tool="highlight" title="Highlighter">🖍<span>Highlight</span></button>
+        <button type="button" class="draw-tool-btn tool-btn" data-tool="eraser" title="Eraser — click or drag over any drawing markup to erase">⌫<span>Eraser</span></button>
+        <span class="slim-sep"></span>
+        <button type="button" class="draw-tool-btn tool-btn" data-tool="callout" title="Callout Box with Leader">💬<span>Callout</span></button>
+        <button type="button" class="draw-tool-btn tool-btn" data-tool="polyline" title="Connected Polyline (double-click to finish)">⌇<span>Polyline</span></button>
+        <button type="button" class="draw-tool-btn tool-btn" data-tool="polygon" title="Closed Polygon Shape (double-click to finish)">⬠<span>Polygon</span></button>
+        <button type="button" class="draw-tool-btn tool-btn" data-tool="cloud" title="Revision Cloud">☁<span>Cloud</span></button>
+        <button type="button" class="draw-tool-btn tool-btn" data-tool="rect" title="Rectangle">▭<span>Rect</span></button>
+        <button type="button" class="draw-tool-btn tool-btn" data-tool="ellipse" title="Circle / Ellipse">◯<span>Ellipse</span></button>
+        <button type="button" class="draw-tool-btn tool-btn" data-tool="line" title="Straight Line Segment">╱<span>Line</span></button>
+        <button type="button" class="draw-tool-btn tool-btn" data-tool="arrow" title="Arrow Leader">↗<span>Arrow</span></button>
+      </div>
     </header>
 
     <!-- Main 3-Column Workspace -->
     <main class="studio-workspace">
-      <!-- Left Sidebar: All Tools Rail + Pages / Outline / Markups -->
+      <!-- Left Sidebar: All Tools Rail + Layout Options + Pages / Outline / Markups -->
       <aside class="sidebar-left">
         <div class="sidebar-tabs">
-          <button class="tab-btn active" data-tab="alltools">All tools</button>
-          <button class="tab-btn" data-tab="pages">Pages</button>
-          <button class="tab-btn" data-tab="bookmarks">Outline</button>
-          <button class="tab-btn" data-tab="markups">Markups (<span id="markup-count">0</span>)</button>
+          <button class="tab-btn active" data-tab="alltools" title="All tools">Tools</button>
+          <button class="tab-btn" data-tab="layout" title="Page Layout &amp; Split View Options">◫ Layout</button>
+          <button class="tab-btn" data-tab="pages" title="Page Thumbnails">Pages</button>
+          <button class="tab-btn" data-tab="bookmarks" title="Document Outline">Outline</button>
+          <button class="tab-btn" data-tab="markups" title="Markups List">Markups (<span id="markup-count">0</span>)</button>
         </div>
         <div id="panel-alltools" class="tab-panel active">
           <div class="craft-rail-header">
@@ -237,6 +259,61 @@
             <span id="craft-rail-filter-badge" class="craft-rail-badge">All</span>
           </div>
           <div id="craft-rail-list" class="craft-rail-list"></div>
+        </div>
+        <div id="panel-layout" class="tab-panel">
+          <div class="layout-options-panel">
+            <h4 class="layout-panel-title">Layout options</h4>
+            <div class="layout-sec-label">PAGE LAYOUT</div>
+            <div class="layout-btn-grid-2">
+              <button type="button" id="layout-btn-single" class="layout-choice-btn active" data-page-layout="single">
+                <span class="layout-ico">📄</span>
+                <span>Single Page</span>
+              </button>
+              <button type="button" id="layout-btn-two" class="layout-choice-btn" data-page-layout="two-page">
+                <span class="layout-ico">📖</span>
+                <span>Two Page</span>
+              </button>
+            </div>
+            <label class="layout-check-row">
+              <input type="checkbox" id="layout-first-alone" checked />
+              <span>Show first page alone</span>
+            </label>
+
+            <div class="layout-sec-label" style="margin-top:14px">SPLIT VIEW</div>
+            <div class="layout-btn-grid-3">
+              <button type="button" id="split-btn-none" class="layout-split-btn active" data-split-mode="none">
+                <span class="split-ico">▭</span>
+                <span>No Split</span>
+              </button>
+              <button type="button" id="split-btn-vertical" class="layout-split-btn" data-split-mode="vertical">
+                <span class="split-ico">◫</span>
+                <span>Vertical</span>
+              </button>
+              <button type="button" id="split-btn-horizontal" class="layout-split-btn" data-split-mode="horizontal">
+                <span class="split-ico">⊟</span>
+                <span>Horizontal</span>
+              </button>
+            </div>
+
+            <div class="layout-pair-preview">
+              <div class="layout-doc-card">
+                <canvas id="layout-thumb-a" width="84" height="108"></canvas>
+                <span id="layout-doc-a-name" class="layout-doc-name">Primary View</span>
+                <button type="button" id="btn-layout-change-a" class="layout-change-link">Change</button>
+              </div>
+              <button type="button" id="btn-layout-swap" class="layout-swap-btn" title="Swap Left/Right Documents or Pages">⇄</button>
+              <div class="layout-doc-card">
+                <canvas id="layout-thumb-b" width="84" height="108"></canvas>
+                <span id="layout-doc-b-name" class="layout-doc-name">Split View</span>
+                <button type="button" id="btn-layout-change-b" class="layout-change-link">Change</button>
+              </div>
+            </div>
+
+            <label class="layout-check-row" style="margin-top:10px">
+              <input type="checkbox" id="layout-sync-scroll" checked />
+              <span>Sync scroll and zoom</span>
+            </label>
+          </div>
         </div>
         <div id="panel-pages" class="tab-panel">
           <div id="thumbnails-list" class="thumbnails-list">
@@ -360,10 +437,39 @@
             </div>
           </div>
 
-          <div id="page-stage" class="page-stage hidden">
-            <canvas id="pdf-canvas" class="pdf-canvas"></canvas>
-            <canvas id="compare-canvas" class="compare-canvas hidden"></canvas>
-            <svg id="overlay-svg" class="overlay-svg"></svg>
+          <div id="viewport-split-shell" class="viewport-split-shell split-none">
+            <div id="primary-pane-scroller" class="pane-scroller">
+              <div id="page-spread-wrap" class="page-spread-wrap">
+                <div id="page-stage" class="page-stage hidden">
+                  <canvas id="pdf-canvas" class="pdf-canvas"></canvas>
+                  <canvas id="compare-canvas" class="compare-canvas hidden"></canvas>
+                  <svg id="overlay-svg" class="overlay-svg"></svg>
+                </div>
+                <div id="page-stage-right" class="page-stage page-stage-companion hidden">
+                  <canvas id="pdf-canvas-right" class="pdf-canvas"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <div id="secondary-pane-scroller" class="pane-scroller secondary-pane hidden">
+              <div class="split-pane-bar">
+                <span id="split-pane-title">Split View</span>
+                <div style="display:flex;align-items:center;gap:4px">
+                  <button type="button" id="btn-split-prev" class="btn-icon btn-sm" title="Previous Page in Split Pane">&lt;</button>
+                  <span id="split-page-indicator" class="mono" style="font-size:11px">P1</span>
+                  <button type="button" id="btn-split-next" class="btn-icon btn-sm" title="Next Page in Split Pane">&gt;</button>
+                  <button type="button" id="btn-split-load-pdf" class="btn btn-secondary btn-sm">Load 2nd PDF</button>
+                </div>
+              </div>
+              <div id="split-spread-wrap" class="page-spread-wrap">
+                <div id="split-stage-left" class="page-stage">
+                  <canvas id="split-canvas-left" class="pdf-canvas"></canvas>
+                </div>
+                <div id="split-stage-right" class="page-stage page-stage-companion hidden">
+                  <canvas id="split-canvas-right" class="pdf-canvas"></canvas>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div id="side-by-side-stage" class="side-by-side-stage hidden">

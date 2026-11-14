@@ -12,6 +12,7 @@ import { computeBoqRows } from './takeoff.js';
 import { syncPropsCardFromState } from './markup-props.js';
 import { isWorkbenchForced, isInspectorCollapsed } from './workbench-ui.js';
 import { hasZoomHistory } from './pdf-engine.js';
+import { renderLayoutViews } from './layout-view.js';
 
 const TOOL_HINTS = {
   select: 'Click to select, drag to move, or Shift+Drag to zoom into any region.',
@@ -27,7 +28,12 @@ const TOOL_HINTS = {
   callout: 'Click and drag from label origin to target arrow.',
   arrow: 'Click and drag to draw a leader arrow.',
   rect: 'Click and drag to draw a rectangle.',
+  ellipse: 'Click and drag to draw a circle or ellipse.',
+  line: 'Click and drag to draw a straight line segment.',
+  polyline: 'Click points to draw a connected polyline; double-click or right-click to finish.',
+  polygon: 'Click vertices to draw a closed polygon shape; double-click or right-click to finish.',
   pen: 'Click and drag to draw freehand.',
+  eraser: 'Click or drag over any drawing markup on the sheet to erase it.',
   highlight: 'Click and drag to highlight (choose colors in Highlight / Note palette).',
   underline: 'Click and drag across text to draw a straight underline.',
   strike: 'Click and drag across text to draw a straight strikethrough line.',
@@ -43,7 +49,9 @@ export function renderUI() {
   const hasDoc = Boolean(state.pdfBytes);
   const showBench = !hasDoc || isWorkbenchForced();
   document.getElementById('drop-zone').classList.toggle('hidden', !showBench);
-  document.getElementById('page-stage').classList.toggle('hidden', showBench || (state.compare.active && state.compare.mode === 'side-by-side'));
+  const hideStage = showBench || (state.compare.active && state.compare.mode === 'side-by-side');
+  document.getElementById('viewport-split-shell')?.classList.toggle('hidden', hideStage);
+  document.getElementById('page-stage').classList.toggle('hidden', hideStage);
   document.getElementById('slim-canvas-bar')?.classList.toggle('hidden', showBench);
   const collapsed = isInspectorCollapsed();
   document.getElementById('sidebar-right')?.classList.toggle('hidden', showBench || collapsed);
@@ -100,6 +108,7 @@ export function renderUI() {
   syncPropsCardFromState();
   renderOverlay();
   renderComparison();
+  renderLayoutViews();
 }
 
 function renderMarkupsInspector() {

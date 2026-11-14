@@ -12,7 +12,7 @@ import { getDefaultMarkupStyle, focusPropTextEditor } from './markup-props.js';
 import { getSearchHighlights } from './search.js';
 import { handleEditTextClick, openInlineTextEditor, closeInlineTextEditor } from './text-edit.js';
 
-let svgEl = null, scrollerEl = null, draft = null, panStart = null;
+let svgEl = null, scrollerEl = null, draft = null, panStart = null, erasing = false;
 let dragMove = null, onCalibrateCallback = null, activeSnapPt = null, leaderPreviewPt = null;
 
 export function initOverlay(onCalibrate) {
@@ -104,6 +104,13 @@ function onPointerDown(e) {
     return;
   }
 
+  if (tool === 'eraser') {
+    erasing = true;
+    svgEl.setPointerCapture(e.pointerId);
+    eraseAtPoint(pt);
+    return;
+  }
+
   if (tool === 'edittext') {
     handleEditTextClick(pt, renderOverlay);
     return;
@@ -132,7 +139,7 @@ function onPointerDown(e) {
     return;
   }
 
-  if (['perimeter', 'area', 'cutout'].includes(tool)) {
+  if (['perimeter', 'area', 'cutout', 'polyline', 'polygon'].includes(tool)) {
     if (!draft) draft = { type: tool, points: [pt, pt], multi: true };
     else { draft.points[draft.points.length - 1] = pt; draft.points.push(pt); }
     renderOverlay();
@@ -160,6 +167,7 @@ function onPointerMove(e) {
   }
 
   const pt = getPdfPointFromEvent(e);
+  if (erasing) { eraseAtPoint(pt); return; }
   const coordsEl = document.getElementById('lcd-coords');
   if (coordsEl) {
     const f = state.unitsPerPt || 1;
@@ -204,6 +212,7 @@ function onPointerMove(e) {
 
 function onPointerUp() {
   if (panStart) { panStart = null; return; }
+  if (erasing) { erasing = false; return; }
   if (dragMove) {
     const changed = dragMove.pushed;
     dragMove = null;
@@ -276,8 +285,18 @@ function finishMultiDraft() {
   const pts = draft.points.slice(0, -1);
   const type = draft.type;
   draft = null;
-  if (pts.length < (type === 'perimeter' ? 2 : 3)) { renderOverlay(); return; }
-  addMarkup({ id: crypto.randomUUID(), page: state.currentPage, type, points: pts, takeoffItemId: state.activeTakeoffId || '', color: state.strokeColor, lineWidth: state.lineWidth });
+  if (pts.length < ((type === 'perimeter' || type === 'polyline') ? 2 : 3)) { renderOverlay(); return; }
+  addMarkup({ id: crypto.randomUUID(), page: state.currentPage, type, points: pts, takeoffItemId: state.activeTakeoffId || '', ...getDefaultMarkupStyle(type) });
+}
+
+function eraseAtPoint(pt) {
+  const idx = state.markups.findIndex((m) => m.page === state.currentPage && hitTestMarkup(m, pt, 10 / state.zoom));
+  if (idx >= 0) {
+    pushHistory();
+    state.markups.splice(idx, 1);
+    state.selectedId = null;
+    notify();
+  }
 }
 
 export function renderOverlay() {
