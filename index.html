@@ -63,7 +63,8 @@
                   <div class="craft-dd-group-title">TEXT, LEADERS &amp; MARKUP</div>
                   <button type="button" class="craft-dd-item tool-btn active" data-tool="select"><span class="dd-ico" style="color:#9ca3af">↖</span>Select / Inspect <kbd>V</kbd></button>
                   <button type="button" class="craft-dd-item tool-btn" data-tool="pan"><span class="dd-ico" style="color:#9ca3af">✥</span>Pan Drawing <kbd>H</kbd></button>
-                  <button type="button" class="craft-dd-item tool-btn" data-tool="text"><span class="dd-ico" style="color:#ec4899">T</span>Text Box / Note <kbd>T</kbd></button>
+                  <button type="button" class="craft-dd-item tool-btn" data-tool="edittext"><span class="dd-ico" style="color:#34d399">✎</span>Edit Existing PDF Text (Auto-Match Font/Size/Opacity) <kbd>E</kbd></button>
+                  <button type="button" class="craft-dd-item tool-btn" data-tool="text"><span class="dd-ico" style="color:#ec4899">T</span>Add New Text Box / Note <kbd>T</kbd></button>
                   <button type="button" class="craft-dd-item tool-btn" data-tool="callout"><span class="dd-ico" style="color:#facc15">💬</span>Callout Leader (Multi-Leader) <kbd>L</kbd></button>
                   <button type="button" class="craft-dd-item tool-btn" data-tool="arrow"><span class="dd-ico" style="color:#fb923c">↗</span>Arrow (Multi-Leader)</button>
                   <button type="button" class="craft-dd-item tool-btn" data-tool="cloud"><span class="dd-ico" style="color:#f87171">☁</span>Revision Cloud <kbd>C</kbd></button>
@@ -184,6 +185,7 @@
           <span id="active-tool-pill" class="active-tool-pill">Tool: Select</span>
           <button class="btn-icon btn-sm tool-btn active" data-tool="select" title="Select (V)">↖ Select</button>
           <button class="btn-icon btn-sm tool-btn" data-tool="pan" title="Pan (H)">✥ Pan</button>
+          <button class="btn-icon btn-sm tool-btn" data-tool="edittext" title="Edit Existing PDF Text — auto-detects font, size &amp; opacity (E)">✎ Edit Text</button>
           <span class="slim-sep"></span>
           <button id="btn-undo" class="btn-icon btn-sm" title="Undo (Ctrl+Z)" disabled>↶ Undo</button>
           <button id="btn-redo" class="btn-icon btn-sm" title="Redo (Ctrl+Y)" disabled>↷ Redo</button>
@@ -427,8 +429,9 @@
               <label for="prop-color">Stroke / Fill</label>
               <div style="display:flex;align-items:center;gap:6px">
                 <input id="prop-color" type="color" value="#c0392b" title="Stroke / Text Color" />
-                <input id="prop-fill-color" type="color" value="#ffffff" title="Fill / Box Color" />
-                <input id="prop-fill-opacity" type="range" min="0" max="100" value="12" style="width:64px" title="Fill Opacity (%)" />
+                <input id="prop-fill-color" type="color" value="#ffffff" title="Fill / Paper Mask Color" />
+                <input id="prop-fill-opacity" type="range" min="0" max="100" value="12" style="width:52px" title="Fill Opacity (%)" />
+                <input id="prop-text-opacity" type="number" min="10" max="100" step="5" value="100" style="width:46px" title="Text Opacity (%)" />
               </div>
             </div>
             <div class="prop-row">

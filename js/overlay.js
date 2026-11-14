@@ -10,6 +10,7 @@ import { screenToPdf, pdfToScreen, distPt, hitTestMarkup } from './geometry.js';
 import { createSvg, drawMarkupSvg, createWheelZoomHandler } from './overlay-draw.js';
 import { getDefaultMarkupStyle, focusPropTextEditor } from './markup-props.js';
 import { getSearchHighlights } from './search.js';
+import { handleEditTextClick, openInlineTextEditor, closeInlineTextEditor } from './text-edit.js';
 
 let svgEl = null, scrollerEl = null, draft = null, panStart = null;
 let dragMove = null, onCalibrateCallback = null, activeSnapPt = null, leaderPreviewPt = null;
@@ -100,6 +101,11 @@ function onPointerDown(e) {
       svgEl.setPointerCapture(e.pointerId);
     }
     notify();
+    return;
+  }
+
+  if (tool === 'edittext') {
+    handleEditTextClick(pt, renderOverlay);
     return;
   }
 
@@ -249,6 +255,7 @@ function onDoubleClick(e) {
   if (draft && draft.multi) { finishMultiDraft(); return; }
   if (state.activeTool === 'select' && state.selectedId) {
     const m = state.markups.find((x) => x.id === state.selectedId);
+    if (m && m.type === 'edittext') { e.preventDefault(); openInlineTextEditor(m, renderOverlay); return; }
     if (m && ['text', 'callout', 'note', 'cloud'].includes(m.type)) {
       e.preventDefault();
       focusPropTextEditor(true);

@@ -164,15 +164,37 @@ export function drawMarkupSvg(svgEl, m, toScreen, state, isSelected, isDraft = f
       nt.textContent = preview;
       g.appendChild(nt);
     }
-  } else if (m.type === 'text') {
+  } else if (m.type === 'text' || m.type === 'edittext') {
     const txt = m.text || '';
-    if ((m.fillOpacity ?? 0) > 0.02) {
-      const tw = Math.max(32, txt.length * (fSize * 0.56) + 12);
-      g.appendChild(createSvg('rect', { x: pts[0].x - 5, y: pts[0].y - fSize, width: tw, height: fSize + 8, rx: 3, fill: fillCol, 'fill-opacity': fillOp, stroke: isSelected ? '#0ea5e9' : 'none', 'stroke-width': 1 }));
+    const txtOp = String(m.textOpacity ?? 1);
+    if (m.type === 'edittext' && pts.length >= 2) {
+      const rx = Math.min(pts[0].x, pts[1].x);
+      const ry = Math.min(pts[0].y, pts[1].y);
+      const origW = Math.abs(pts[1].x - pts[0].x);
+      const origH = Math.abs(pts[1].y - pts[0].y);
+      const rw = Math.max(origW + 4, txt.length * (fSize * 0.56) + 6);
+      const rh = Math.max(origH + 2, fSize * 1.18);
+      g.appendChild(createSvg('rect', {
+        x: rx - 2, y: ry - 1, width: rw, height: rh, rx: 1.5,
+        fill: m.fillColor || '#ffffff', 'fill-opacity': m.fillOpacity != null ? String(m.fillOpacity) : '1',
+        stroke: isSelected ? '#0ea5e9' : 'none', 'stroke-width': isSelected ? 1.3 : 0, 'stroke-dasharray': isSelected ? '3,2' : '',
+      }));
+      const basePt = m.baselineY != null ? toScreen({ x: m.points[0].x, y: m.baselineY }) : { x: rx, y: ry + fSize * 0.84 };
+      const t = createSvg('text', {
+        x: rx, y: basePt.y, fill: m.color || '#2C2C2E', 'fill-opacity': txtOp,
+        'font-family': fontFam, 'font-size': fSize, 'font-weight': fWeight, 'font-style': fStyle,
+      });
+      t.textContent = txt;
+      g.appendChild(t);
+    } else {
+      if ((m.fillOpacity ?? 0) > 0.02) {
+        const tw = Math.max(32, txt.length * (fSize * 0.56) + 12);
+        g.appendChild(createSvg('rect', { x: pts[0].x - 5, y: pts[0].y - fSize, width: tw, height: fSize + 8, rx: 3, fill: fillCol, 'fill-opacity': fillOp, stroke: isSelected ? '#0ea5e9' : 'none', 'stroke-width': 1 }));
+      }
+      const t = createSvg('text', { x: pts[0].x, y: pts[0].y, fill: m.color || stroke, 'fill-opacity': txtOp, 'font-family': fontFam, 'font-size': fSize, 'font-weight': fWeight, 'font-style': fStyle });
+      t.textContent = txt;
+      g.appendChild(t);
     }
-    const t = createSvg('text', { x: pts[0].x, y: pts[0].y, fill: m.color || stroke, 'font-family': fontFam, 'font-size': fSize, 'font-weight': fWeight, 'font-style': fStyle });
-    t.textContent = txt;
-    g.appendChild(t);
   } else if (m.type === 'count') {
     const r = Math.max(9, 10 * state.zoom);
     g.appendChild(createSvg('circle', { cx: pts[0].x, cy: pts[0].y, r, fill: stroke, stroke: '#ffffff', 'stroke-width': 1.8 }));

@@ -15,6 +15,12 @@ This logbook tracks bi-weekly upstream checks against open-source PDF & CAD refe
 
 ## Release & Integration History
 
+### `v1.5.0` — 2026-11-14 (Smart In-Place PDF Text Editor & Typo Fixer)
+- **New Features Integrated:**
+  - **Edit Existing PDF Text (`edittext`, Shortcut `E`):** Click any text in an open PDF to automatically detect its font family (`Helvetica` / `Courier` / `Times`), bold/italic weight, exact point size (`pt`), ink color, paper background color, and text opacity (`js/text-edit.js`).
+  - **Seamless In-Place Masking & Floating Editor:** Launches an inline floating input directly over the clicked text span, masks the original typo with the sampled paper background color, and renders the edited text in the matched font, size, color, and opacity on both the live SVG canvas (`js/overlay-draw.js`) and exported PDFs (`js/exporter.js`).
+  - **Text Opacity Inspector Control:** Added `#prop-text-opacity` (`10%–100%`) in the Properties & Style panel (`index.html`, `js/markup-props.js`).
+
 ### `v1.4.0` — 2026-11-14 (Baseline Audit, Hardening & Blank PDF Creator)
 - **Upstream Alignment:** Full parity audit against PDFCraft workbench patterns and OpenPDF Studio AEC tools.
 - **New Features Integrated:**

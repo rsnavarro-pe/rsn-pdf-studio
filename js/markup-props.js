@@ -18,6 +18,7 @@ export function getDefaultMarkupStyle(type) {
     fontSize: state.fontSize,
     fontBold: state.fontBold,
     fontItalic: state.fontItalic,
+    textOpacity: state.textOpacity ?? 1.0,
     arrowHead: state.arrowHead,
     arrowSize: state.arrowSize,
     cloudArc: state.cloudArc,
@@ -97,6 +98,10 @@ export function initMarkupProps() {
     state.fillOpacity = Number(e.target.value) / 100;
     applyToSelected((m) => { m.fillOpacity = state.fillOpacity; });
   });
+  document.getElementById('prop-text-opacity')?.addEventListener('input', (e) => {
+    state.textOpacity = Math.max(0.1, Math.min(1, (Number(e.target.value) || 100) / 100));
+    applyToSelected((m) => { m.textOpacity = state.textOpacity; });
+  });
 
   const setHighlightColor = (hex) => {
     state.highlightColor = hex;
@@ -174,6 +179,9 @@ export function syncPropsCardFromState() {
   if (sel.color) document.getElementById('prop-color').value = sel.color;
   if (sel.fillColor) document.getElementById('prop-fill-color').value = sel.fillColor;
   if (sel.fillOpacity != null) document.getElementById('prop-fill-opacity').value = Math.round(sel.fillOpacity * 100);
+  if (sel.textOpacity != null && document.getElementById('prop-text-opacity')) {
+    document.getElementById('prop-text-opacity').value = Math.round(sel.textOpacity * 100);
+  }
   if (sel.lineWidth) document.getElementById('prop-width').value = sel.lineWidth;
   if (sel.lineStyle) document.getElementById('prop-line-style').value = sel.lineStyle;
   if (sel.fontFamily) document.getElementById('prop-font-family').value = sel.fontFamily;

@@ -13,6 +13,17 @@ export async function exportAnnotatedPdf() {
   const { PDFDocument, StandardFonts, rgb } = window.PDFLib;
   const doc = await PDFDocument.load(state.pdfBytes.slice());
   const font = await doc.embedFont(StandardFonts.HelveticaBold);
+  const fontCache = { HelveticaBold: font };
+  const getMarkupFont = async (m) => {
+    const fam = m.fontFamily || 'Helvetica';
+    const b = Boolean(m.fontBold ?? true), it = Boolean(m.fontItalic);
+    let key = StandardFonts.Helvetica;
+    if (fam === 'Courier') key = b && it ? StandardFonts.CourierBoldOblique : (b ? StandardFonts.CourierBold : (it ? StandardFonts.CourierOblique : StandardFonts.Courier));
+    else if (fam === 'Times') key = b && it ? StandardFonts.TimesRomanBoldItalic : (b ? StandardFonts.TimesRomanBold : (it ? StandardFonts.TimesRomanItalic : StandardFonts.TimesRoman));
+    else key = b && it ? StandardFonts.HelveticaBoldOblique : (b ? StandardFonts.HelveticaBold : (it ? StandardFonts.HelveticaOblique : StandardFonts.Helvetica));
+    if (!fontCache[key]) fontCache[key] = await doc.embedFont(key);
+    return fontCache[key];
+  };
   const pages = doc.getPages();
 
   for (const m of state.markups) {
@@ -118,8 +129,30 @@ export async function exportAnnotatedPdf() {
       if (m.text) {
         page.drawText(m.text, { x: p.x + 12, y: py - 4, size: 10, font, color: rgb(0.17, 0.17, 0.18) });
       }
-    } else if (m.type === 'text' && m.points.length >= 1) {
-      page.drawText(m.text || '', { x: m.points[0].x, y: toPdfY(m.points[0].y), size: m.fontSize || 12, font, color });
+    } else if ((m.type === 'text' || m.type === 'edittext') && m.points.length >= 1) {
+      const mFont = await getMarkupFont(m);
+      const fSize = m.fontSize || 12;
+      const txtOp = m.textOpacity ?? 1;
+      if (m.type === 'edittext' && m.points.length >= 2) {
+        const [a, b] = m.points;
+        const rx = Math.min(a.x, b.x) - 1.5;
+        const origW = Math.abs(b.x - a.x);
+        const origH = Math.abs(b.y - a.y);
+        const rw = Math.max(origW + 3, (m.text || '').length * (fSize * 0.55) + 4);
+        const rh = Math.max(origH + 2, fSize * 1.18);
+        page.drawRectangle({
+          x: rx,
+          y: toPdfY(Math.max(a.y, b.y)) - 1,
+          width: rw,
+          height: rh,
+          color: hexToRgb(m.fillColor || '#ffffff', rgb),
+          opacity: m.fillOpacity != null ? Number(m.fillOpacity) : 1,
+        });
+        const baseY = m.baselineY != null ? toPdfY(m.baselineY) : toPdfY(Math.min(a.y, b.y) + fSize * 0.84);
+        page.drawText(m.text || '', { x: Math.min(a.x, b.x), y: baseY, size: fSize, font: mFont, color, opacity: txtOp });
+      } else {
+        page.drawText(m.text || '', { x: m.points[0].x, y: toPdfY(m.points[0].y), size: fSize, font: mFont, color, opacity: txtOp });
+      }
     } else if (m.type === 'count' && m.points.length >= 1) {
       const p = m.points[0];
       page.drawCircle({ x: p.x, y: toPdfY(p.y), size: 9, color, borderColor: rgb(1, 1, 1), borderWidth: 1.2 });

@@ -7,7 +7,7 @@ import { state, setTool, notify } from './state.js';
 const RAIL_TOOLS = [
   { id: 'organize', label: 'Organize pages', desc: 'Page grid · Rotate · Delete · Split & Extract', icon: '⊞', color: '#4ade80', cat: 'edit', hubFilter: 'ORGANIZE', hubQ: 'Split' },
   { id: 'comments', label: 'Add comments', desc: 'Sticky note · Highlight · Multi-leader Callout', icon: '💬', color: '#facc15', cat: 'edit', canvasTool: 'callout' },
-  { id: 'edit', label: 'Edit a PDF', desc: 'Edit text & fonts · Multi-leader arrows · Clouds', icon: '✎', color: '#ec4899', cat: 'edit', canvasTool: 'text' },
+  { id: 'edit', label: 'Edit a PDF', desc: 'Auto-detect font, size & opacity to fix typos in place', icon: '✎', color: '#34d399', cat: 'edit', canvasTool: 'edittext' },
   { id: 'arrow', label: 'Multi-leader Arrow', desc: 'Attach 2+ leader arrow branches to one callout/arrow', icon: '↗', color: '#fb923c', cat: 'edit', canvasTool: 'arrow' },
   { id: 'cloud', label: 'Revision Cloud', desc: 'Scalloped revision cloud with delta tag', icon: '☁', color: '#f87171', cat: 'edit', canvasTool: 'cloud' },
   { id: 'export', label: 'Export a PDF', desc: 'Export pages to PNG, JPG, TIFF, WebP, SVG, PPTX, DOCX', icon: '📤', color: '#818cf8', cat: 'convert', hubFilter: 'CONVERT', hubQ: 'Images' },

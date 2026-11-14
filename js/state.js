@@ -28,6 +28,7 @@ export const state = {
   fontSize: 13,
   fontBold: true,
   fontItalic: false,
+  textOpacity: 1.0,
   arrowHead: 'closed', // closed | open | slash | dot | both
   arrowSize: 11,
   cloudArc: 14,

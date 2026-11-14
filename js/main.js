@@ -239,7 +239,7 @@ function bindCalibrationModal() {
 }
 
 function bindKeyboardShortcuts() {
-  const map = { v: 'select', h: 'pan', z: 'zoombox', m: 'distance', p: 'perimeter', a: 'area', k: 'count', c: 'cloud', l: 'callout', t: 'text' };
+  const map = { v: 'select', h: 'pan', z: 'zoombox', e: 'edittext', m: 'distance', p: 'perimeter', a: 'area', k: 'count', c: 'cloud', l: 'callout', t: 'text' };
   window.addEventListener('keydown', async (e) => {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') { e.preventDefault(); undo(); return; }
