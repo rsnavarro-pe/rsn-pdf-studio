@@ -15,6 +15,12 @@ This logbook tracks bi-weekly upstream checks against open-source PDF & CAD refe
 
 ## Release & Integration History
 
+### `v1.7.0` — 2026-11-14 (Open PDF Studio Drawing Ribbon, Granular OSNAP, Modify/Clipboard & AEC / NEN 1414 Symbol Palette)
+- **Upstream Alignment (`https://open-pdf-studio.open-aec.com` v2026.44.8):**
+  - **Expanded Drawing Ribbon (`#draw-subtoolbar`):** Structured into `SELECTION` (`Select`, `Hand`, `Region`), `DRAW` (`Line`, `Arrow`, `Polyline`, `Polygon`, `Rect`, `Ellipse`, `Arc`, `Cloud`, `Hatch`, `Star`, `Callout`, `Pen`, `Highlight`, `Eraser`), `SNAP` (`Object snap` master toggle + `Endpoint`, `Midpoint`, `Vertex`, `Start point`, `Center` checkboxes with distinct snap glyphs), `MODIFY` (`Rotate CW`, `Rotate CCW`, `Flip H`, `Flip V`, `Duplicate`), `CLIPBOARD` (`Copy`, `Paste`, `Cut`), and `COLLECTION` (`Palette`, `Save Sym`).
+  - **AEC & NEN 1414 Tool Palette (`js/symbol-palette.js`, `⊞ Symbols` Tab):** Added 12 searchable, scalable (`0.5x`–`3x`) symbol libraries (`NL IFC Construction`, `NL Electrical`, `NL Construction Site`, `NL Sanitary`, `NL Kitchen`, and 7 `NL NEN 1414` fire/safety/HVAC/sprinkler libraries) plus custom symbol saving, rendered on both SVG and exported PDFs.
+  - **Document & Annotations Inspector + Statistics Pill:** Added live `File`, `Pages`, `Page Size`, `Total Markups`, and `On Page` summary rows in the right Properties panel and a `Statistics` badge in the status bar.
+
 ### `v1.6.0` — 2026-11-14 (Draw Sub-Toolbar, Single/Two-Page Spreads & Vertical/Horizontal Split View)
 - **New Features Integrated:**
   - **Dedicated Draw Toolbar (`#draw-subtoolbar`, `✏ Draw`):** Added full drawing and shape suite matching PDFCraft/OpenPDF Studio (`Pen`, `Highlighter`, `Eraser`, `Callout`, `Polyline`, `Polygon`, `Revision Cloud`, `Rectangle`, `Circle/Ellipse`, `Straight Line`, and `Arrow`) with full SVG rendering and native `pdf-lib` export (`js/overlay-draw.js`, `js/overlay.js`, `js/exporter.js`).

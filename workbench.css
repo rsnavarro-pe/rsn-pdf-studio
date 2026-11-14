@@ -229,18 +229,57 @@ body.craft-dark .thumb-item, body.craft-dark .markup-item { background: #26272c;
 }
 .craft-recent-item:hover { border-color: #4f8ff7; }
 
-/* Draw Sub-Toolbar */
+/* Draw Sub-Toolbar / Open PDF Studio Drawing Ribbon */
 .draw-subtoolbar {
-  display: flex; align-items: center; justify-content: center; gap: 6px; padding: 5px 14px;
-  background: var(--bg-ribbon); border-top: 1px solid var(--border-subtle); flex-wrap: wrap;
+  display: flex; align-items: stretch; justify-content: flex-start; gap: 8px; padding: 6px 14px;
+  background: var(--bg-ribbon); border-top: 1px solid var(--border-subtle); overflow-x: auto;
 }
+.ribbon-group { display: flex; flex-direction: column; justify-content: space-between; gap: 3px; }
+.ribbon-group-row { display: flex; align-items: center; gap: 4px; flex-wrap: nowrap; }
+.ribbon-group-label { font-size: 9px; font-weight: 700; letter-spacing: 0.8px; color: #d97706; text-align: center; opacity: 0.9; }
+.ribbon-snap-grid { display: grid; grid-template-columns: repeat(3, auto); gap: 2px 8px; align-items: center; }
+.snap-chk { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text-main); cursor: pointer; white-space: nowrap; }
+.snap-chk input { accent-color: #3b82f6; margin: 0; }
 .draw-tool-btn {
-  display: inline-flex; align-items: center; gap: 5px; padding: 4px 9px; border-radius: 5px;
+  display: inline-flex; align-items: center; gap: 4px; padding: 3px 7px; border-radius: 5px;
   border: 1px solid var(--border-subtle); background: var(--bg-panel); color: var(--text-main);
-  font-size: 12px; font-weight: 600; cursor: pointer;
+  font-size: 11.5px; font-weight: 600; cursor: pointer; white-space: nowrap;
 }
-.draw-tool-btn span { font-size: 11px; }
-.draw-tool-btn.active { background: var(--accent-primary); border-color: var(--accent-primary); color: #fff; }
+.draw-tool-btn span { font-size: 10.5px; }
+.draw-tool-btn:hover { border-color: #f59e0b; }
+.draw-tool-btn.active { background: #d97706; border-color: #f59e0b; color: #fff; }
+
+/* AEC Symbol Tool Palette & Doc Inspector */
+.symbol-palette-panel { display: flex; flex-direction: column; gap: 8px; height: 100%; }
+.sym-palette-top { display: flex; flex-direction: column; gap: 6px; }
+.sym-palette-title-row { display: flex; align-items: center; justify-content: space-between; font-size: 12.5px; }
+.sym-scale-wrap { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text-muted); }
+.sym-scale-wrap select, #symbol-search {
+  background: var(--bg-panel); border: 1px solid var(--border-subtle); color: var(--text-main);
+  border-radius: 5px; padding: 4px 7px; font-size: 11.5px;
+}
+.symbol-palette-list { display: flex; flex-direction: column; gap: 5px; overflow-y: auto; padding-right: 2px; }
+.sym-cat { border: 1px solid var(--border-subtle); border-radius: 6px; background: rgba(0,0,0,0.1); }
+.sym-cat-header {
+  display: flex; align-items: center; gap: 6px; padding: 6px 8px; cursor: pointer;
+  font-size: 11.5px; font-weight: 600; list-style: none;
+}
+.sym-cat-badge { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border: 1px solid; border-radius: 3px; font-size: 10px; }
+.sym-cat-title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sym-cat-count { font-size: 10px; color: var(--text-muted); font-family: var(--font-mono); }
+.sym-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px 6px 6px; border-top: 1px solid var(--border-subtle); }
+.sym-item-btn {
+  display: flex; align-items: center; gap: 5px; padding: 4px 5px; border-radius: 4px;
+  border: 1px solid var(--border-subtle); background: var(--bg-panel); color: var(--text-main);
+  cursor: pointer; text-align: left; min-width: 0;
+}
+.sym-item-btn.active, .sym-item-btn:hover { border-color: #f59e0b; background: rgba(245, 158, 11, 0.14); }
+.sym-glyph { font-size: 9px; font-weight: 700; padding: 1px 3px; border: 1px solid; border-radius: 3px; white-space: nowrap; }
+.sym-label { font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.doc-meta-grid { display: flex; flex-direction: column; gap: 4px; font-size: 11.5px; }
+.doc-meta-row { display: flex; justify-content: space-between; gap: 8px; color: var(--text-muted); }
+.doc-meta-row strong { color: var(--text-main); font-weight: 600; text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.status-stats-pill { padding: 2px 8px; border-radius: 10px; background: var(--bg-panel); border: 1px solid var(--border-subtle); font-size: 11px; }
 
 /* Layout Options Sidebar Panel */
 .layout-options-panel { display: flex; flex-direction: column; gap: 8px; padding: 4px 2px; }

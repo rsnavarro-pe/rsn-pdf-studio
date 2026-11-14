@@ -21,6 +21,7 @@ import { initMarkupProps } from './markup-props.js';
 import { initSignatureModal } from './signature.js';
 import { initWorkbenchUI, recordRecentFile, clearWorkbenchForce } from './workbench-ui.js';
 import { initLayoutView, getSpreadCompanionPage } from './layout-view.js';
+import { initSymbolPalette } from './symbol-palette.js';
 import { renderUI } from './ui.js';
 
 let pendingCalibratePtSpan = 0;
@@ -40,6 +41,7 @@ async function init() {
   initPdfTools();
   initSignatureModal();
   initLayoutView();
+  initSymbolPalette();
   initWorkbenchUI(async () => {
     if (!state.pdfBytes) {
       const bytes = await generateSamplePdfBytes(false);
@@ -52,6 +54,8 @@ async function init() {
   refreshTakeoffSelectFn = bindTakeoffEvents();
   document.getElementById('btn-osnap').addEventListener('click', () => {
     state.osnap = !state.osnap;
+    const snapMaster = document.getElementById('snap-master');
+    if (snapMaster) snapMaster.checked = state.osnap;
     notify();
   });
   notify();

@@ -40,8 +40,8 @@ function getPdfPointFromEvent(e, applySnap = true) {
   const rect = svgEl.getBoundingClientRect();
   const raw = screenToPdf(e.clientX - rect.left, e.clientY - rect.top, state.zoom, state.rotation, state.pageWidthPt, state.pageHeightPt);
   if (applySnap && state.osnap && !['select', 'pan', 'pen', 'highlight', 'underline', 'strike', 'note'].includes(state.activeTool)) {
-    const res = findNearestSnap(raw, state.snapPoints, 10 / state.zoom);
-    activeSnapPt = res.snapped ? res.pt : null;
+    const res = findNearestSnap(raw, state.snapPoints, 10 / state.zoom, state.snapModes);
+    activeSnapPt = res.snapped ? { ...res.pt, kind: res.kind } : null;
     return res.pt;
   }
   activeSnapPt = null;
@@ -136,6 +136,13 @@ function onPointerDown(e) {
   if (tool === 'stamp') {
     const stampData = buildStampPayload(state.stampType);
     addMarkup({ id: crypto.randomUUID(), page: state.currentPage, type: 'stamp', points: [pt], text: stampData.label, stampData, color: stampData.color || state.strokeColor, lineWidth: state.lineWidth });
+    return;
+  }
+
+  if (tool === 'symbol') {
+    const sym = state.activeSymbol || { id: 'sym', code: 'SYM', label: 'AEC Symbol', color: state.strokeColor, shape: 'rect' };
+    const symbolData = { ...sym, scale: state.symbolScale || 1 };
+    addMarkup({ id: crypto.randomUUID(), page: state.currentPage, type: 'symbol', points: [pt], text: `${sym.code} — ${sym.label}`, symbolData, color: sym.color || state.strokeColor, lineWidth: state.lineWidth });
     return;
   }
 
@@ -328,6 +335,15 @@ export function renderOverlay() {
   }
   if (activeSnapPt && state.osnap) {
     const sp = toScreen(activeSnapPt);
-    svgEl.appendChild(createSvg('rect', { x: sp.x - 5, y: sp.y - 5, width: 10, height: 10, fill: 'none', stroke: '#90472D', 'stroke-width': 2 }));
+    const k = activeSnapPt.kind || 'endpoint';
+    if (k === 'midpoint') {
+      svgEl.appendChild(createSvg('polygon', { points: `${sp.x},${sp.y - 6} ${sp.x + 6},${sp.y + 5} ${sp.x - 6},${sp.y + 5}`, fill: 'none', stroke: '#10b981', 'stroke-width': 2 }));
+    } else if (k === 'center') {
+      svgEl.appendChild(createSvg('circle', { cx: sp.x, cy: sp.y, r: 5.5, fill: 'none', stroke: '#06b6d4', 'stroke-width': 2 }));
+    } else if (k === 'vertex') {
+      svgEl.appendChild(createSvg('polygon', { points: `${sp.x},${sp.y - 6} ${sp.x + 6},${sp.y} ${sp.x},${sp.y + 6} ${sp.x - 6},${sp.y}`, fill: 'none', stroke: '#f59e0b', 'stroke-width': 2 }));
+    } else {
+      svgEl.appendChild(createSvg('rect', { x: sp.x - 5, y: sp.y - 5, width: 10, height: 10, fill: 'none', stroke: '#90472D', 'stroke-width': 2 }));
+    }
   }
 }

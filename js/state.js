@@ -15,7 +15,18 @@ export const state = {
   selectedId: null,
   addingLeaderToId: null,
   osnap: true,
+  snapModes: {
+    endpoint: true,
+    midpoint: true,
+    vertex: true,
+    startpoint: true,
+    center: true,
+  },
   snapPoints: [],
+  clipboardMarkup: null,
+  activeSymbol: null, // { id, label, category, color, shape, code }
+  symbolScale: 1,
+  customSymbols: [],
 
   // Style defaults
   strokeColor: '#c0392b',

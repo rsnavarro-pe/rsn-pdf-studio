@@ -7,6 +7,7 @@ import {
 } from './geometry.js';
 import { drawStampSvg } from './stamp-renderer.js';
 import { getFontStack, getDashArray, drawArrowHeadSvg } from './markup-props.js';
+import { drawAecSymbolSvg } from './symbol-palette.js';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
@@ -217,6 +218,33 @@ export function drawMarkupSvg(svgEl, m, toScreen, state, isSelected, isDraft = f
     g.appendChild(t);
   } else if (m.type === 'stamp') {
     drawStampSvg(g, pts[0], m.stampData || { kind: 'badge', id: m.text, color: stroke }, state.zoom, createSvg);
+  } else if (m.type === 'symbol') {
+    drawAecSymbolSvg(g, pts[0], m.symbolData || { code: m.text || 'SYM', color: stroke, scale: 1 }, state.zoom, createSvg);
+  } else if (m.type === 'arc' && pts.length >= 2) {
+    const [a, b] = pts;
+    const dx = b.x - a.x, dy = b.y - a.y, r = Math.max(8, Math.hypot(dx, dy) * 0.72);
+    g.appendChild(createSvg('path', { d: `M ${a.x} ${a.y} A ${r} ${r} 0 0 1 ${b.x} ${b.y}`, fill: 'none', stroke, 'stroke-width': sw, 'stroke-dasharray': dash }));
+  } else if (m.type === 'hatch' && pts.length >= 2) {
+    const [a, b] = pts;
+    const rx = Math.min(a.x, b.x), ry = Math.min(a.y, b.y), rw = Math.abs(b.x - a.x), rh = Math.abs(b.y - a.y);
+    g.appendChild(createSvg('rect', { x: rx, y: ry, width: rw, height: rh, fill: fillCol, 'fill-opacity': fillOp, stroke, 'stroke-width': sw, 'stroke-dasharray': dash }));
+    const step = Math.max(6, 9 * state.zoom);
+    let hPath = '';
+    for (let d = step; d < rw + rh; d += step) {
+      const x1 = rx + Math.max(0, d - rh), y1 = ry + Math.min(rh, d);
+      const x2 = rx + Math.min(rw, d), y2 = ry + Math.max(0, d - rw);
+      hPath += `M ${x1} ${y1} L ${x2} ${y2} `;
+    }
+    if (hPath) g.appendChild(createSvg('path', { d: hPath, fill: 'none', stroke, 'stroke-width': Math.max(1, sw * 0.6), 'stroke-opacity': '0.55' }));
+  } else if (m.type === 'star' && pts.length >= 2) {
+    const [a, b] = pts;
+    const cx = (a.x + b.x) / 2, cy = (a.y + b.y) / 2, R = Math.max(6, Math.hypot(b.x - a.x, b.y - a.y) / 2), r = R * 0.42;
+    const sPts = Array.from({ length: 10 }, (_, i) => {
+      const ang = -Math.PI / 2 + (i * Math.PI) / 5;
+      const rad = i % 2 === 0 ? R : r;
+      return `${(cx + rad * Math.cos(ang)).toFixed(1)},${(cy + rad * Math.sin(ang)).toFixed(1)}`;
+    }).join(' ');
+    g.appendChild(createSvg('polygon', { points: sPts, fill: fillCol, 'fill-opacity': fillOp, stroke, 'stroke-width': sw }));
   }
 
   if (isSelected && !['pen', 'highlight'].includes(m.type)) {

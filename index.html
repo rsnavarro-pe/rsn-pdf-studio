@@ -224,29 +224,96 @@
         </div>
       </nav>
 
-      <!-- Dedicated Draw Sub-Toolbar (matches reference screenshot: Pen, Highlighter, Eraser | Callout, Polyline, Polygon, Cloud, Rectangle, Ellipse, Line, Arrow) -->
-      <div id="draw-subtoolbar" class="draw-subtoolbar hidden" role="toolbar" aria-label="Draw Tools">
-        <button type="button" class="draw-tool-btn tool-btn" data-tool="pen" title="Freehand Pen / Ink">✒<span>Pen</span></button>
-        <button type="button" class="draw-tool-btn tool-btn" data-tool="highlight" title="Highlighter">🖍<span>Highlight</span></button>
-        <button type="button" class="draw-tool-btn tool-btn" data-tool="eraser" title="Eraser — click or drag over any drawing markup to erase">⌫<span>Eraser</span></button>
+      <!-- Dedicated Open PDF Studio Drawing Ribbon (SELECTION | DRAW | SNAP | MODIFY | CLIPBOARD | COLLECTION) -->
+      <div id="draw-subtoolbar" class="draw-subtoolbar hidden" role="toolbar" aria-label="Open PDF Studio Drawing Ribbon">
+        <div class="ribbon-group">
+          <div class="ribbon-group-row">
+            <button type="button" class="draw-tool-btn tool-btn" data-tool="select" title="Select / Move Markup (V)">↖<span>Select</span></button>
+            <button type="button" class="draw-tool-btn tool-btn" data-tool="pan" title="Hand / Pan Tool (H)">✥<span>Hand</span></button>
+            <button type="button" class="draw-tool-btn tool-btn" data-tool="zoombox" title="Zoom to Region (Z)">🔍<span>Region</span></button>
+          </div>
+          <div class="ribbon-group-label">SELECTION</div>
+        </div>
+
         <span class="slim-sep"></span>
-        <button type="button" class="draw-tool-btn tool-btn" data-tool="callout" title="Callout Box with Leader">💬<span>Callout</span></button>
-        <button type="button" class="draw-tool-btn tool-btn" data-tool="polyline" title="Connected Polyline (double-click to finish)">⌇<span>Polyline</span></button>
-        <button type="button" class="draw-tool-btn tool-btn" data-tool="polygon" title="Closed Polygon Shape (double-click to finish)">⬠<span>Polygon</span></button>
-        <button type="button" class="draw-tool-btn tool-btn" data-tool="cloud" title="Revision Cloud">☁<span>Cloud</span></button>
-        <button type="button" class="draw-tool-btn tool-btn" data-tool="rect" title="Rectangle">▭<span>Rect</span></button>
-        <button type="button" class="draw-tool-btn tool-btn" data-tool="ellipse" title="Circle / Ellipse">◯<span>Ellipse</span></button>
-        <button type="button" class="draw-tool-btn tool-btn" data-tool="line" title="Straight Line Segment">╱<span>Line</span></button>
-        <button type="button" class="draw-tool-btn tool-btn" data-tool="arrow" title="Arrow Leader">↗<span>Arrow</span></button>
+
+        <div class="ribbon-group">
+          <div class="ribbon-group-row">
+            <button type="button" class="draw-tool-btn tool-btn" data-tool="line" title="Straight Line Segment">╱<span>Line</span></button>
+            <button type="button" class="draw-tool-btn tool-btn" data-tool="arrow" title="Arrow Leader">↗<span>Arrow</span></button>
+            <button type="button" class="draw-tool-btn tool-btn" data-tool="polyline" title="Connected Polyline (double-click to finish)">⌇<span>Polyline</span></button>
+            <button type="button" class="draw-tool-btn tool-btn" data-tool="polygon" title="Closed Polygon Shape (double-click to finish)">⬠<span>Polygon</span></button>
+            <button type="button" class="draw-tool-btn tool-btn" data-tool="rect" title="Rectangle">▭<span>Rect</span></button>
+            <button type="button" class="draw-tool-btn tool-btn" data-tool="ellipse" title="Circle / Ellipse">◯<span>Ellipse</span></button>
+            <button type="button" class="draw-tool-btn tool-btn" data-tool="arc" title="Curved CAD Arc">◜<span>Arc</span></button>
+            <button type="button" class="draw-tool-btn tool-btn" data-tool="cloud" title="Revision Cloud">☁<span>Cloud</span></button>
+            <button type="button" class="draw-tool-btn tool-btn" data-tool="hatch" title="Cross-Hatch Area Box">▨<span>Hatch</span></button>
+            <button type="button" class="draw-tool-btn tool-btn" data-tool="star" title="Star / Marker Shape">☆<span>Star</span></button>
+            <button type="button" class="draw-tool-btn tool-btn" data-tool="callout" title="Callout Box with Leader">💬<span>Callout</span></button>
+            <button type="button" class="draw-tool-btn tool-btn" data-tool="pen" title="Freehand Pen / Ink">✒<span>Pen</span></button>
+            <button type="button" class="draw-tool-btn tool-btn" data-tool="highlight" title="Highlighter">🖍<span>Highlight</span></button>
+            <button type="button" class="draw-tool-btn tool-btn" data-tool="eraser" title="Eraser — click or drag over any drawing markup to erase">⌫<span>Eraser</span></button>
+          </div>
+          <div class="ribbon-group-label">DRAW</div>
+        </div>
+
+        <span class="slim-sep"></span>
+
+        <div class="ribbon-group">
+          <div class="ribbon-snap-grid">
+            <label class="snap-chk"><input type="checkbox" id="snap-master" checked /><span>Object snap</span></label>
+            <label class="snap-chk"><input type="checkbox" id="snap-endpoint" checked /><span>Endpoint</span></label>
+            <label class="snap-chk"><input type="checkbox" id="snap-midpoint" checked /><span>Midpoint</span></label>
+            <label class="snap-chk"><input type="checkbox" id="snap-vertex" checked /><span>Vertex</span></label>
+            <label class="snap-chk"><input type="checkbox" id="snap-startpoint" checked /><span>Start point</span></label>
+            <label class="snap-chk"><input type="checkbox" id="snap-center" checked /><span>Center</span></label>
+          </div>
+          <div class="ribbon-group-label">SNAP</div>
+        </div>
+
+        <span class="slim-sep"></span>
+
+        <div class="ribbon-group">
+          <div class="ribbon-group-row">
+            <button type="button" id="mod-rot-cw" class="draw-tool-btn" title="Rotate Selected Markup 90° Clockwise">↻<span>Rot CW</span></button>
+            <button type="button" id="mod-rot-ccw" class="draw-tool-btn" title="Rotate Selected Markup 90° Counter-Clockwise">↺<span>Rot CCW</span></button>
+            <button type="button" id="mod-flip-h" class="draw-tool-btn" title="Flip Selected Markup Horizontally">⇆<span>Flip H</span></button>
+            <button type="button" id="mod-flip-v" class="draw-tool-btn" title="Flip Selected Markup Vertically">⇅<span>Flip V</span></button>
+            <button type="button" id="mod-duplicate" class="draw-tool-btn" title="Duplicate / Array Selected Markup">⧉<span>Clone</span></button>
+          </div>
+          <div class="ribbon-group-label">MODIFY</div>
+        </div>
+
+        <span class="slim-sep"></span>
+
+        <div class="ribbon-group">
+          <div class="ribbon-group-row">
+            <button type="button" id="clip-copy" class="draw-tool-btn" title="Copy Selected Markup">📋<span>Copy</span></button>
+            <button type="button" id="clip-paste" class="draw-tool-btn" title="Paste Markup onto Current Page">📥<span>Paste</span></button>
+            <button type="button" id="clip-cut" class="draw-tool-btn" title="Cut Selected Markup">✂<span>Cut</span></button>
+          </div>
+          <div class="ribbon-group-label">CLIPBOARD</div>
+        </div>
+
+        <span class="slim-sep"></span>
+
+        <div class="ribbon-group">
+          <div class="ribbon-group-row">
+            <button type="button" id="btn-open-symbol-palette" class="draw-tool-btn" title="Open AEC / NEN 1414 Symbol Tool Palette">⊞<span>Palette</span></button>
+            <button type="button" id="mod-save-symbol" class="draw-tool-btn" title="Save Selected Markup into Custom Symbol Collection">＋<span>Save Sym</span></button>
+          </div>
+          <div class="ribbon-group-label">COLLECTION</div>
+        </div>
       </div>
     </header>
 
     <!-- Main 3-Column Workspace -->
     <main class="studio-workspace">
-      <!-- Left Sidebar: All Tools Rail + Layout Options + Pages / Outline / Markups -->
+      <!-- Left Sidebar: All Tools Rail + Layout Options + AEC Tool Palette + Pages / Outline / Markups -->
       <aside class="sidebar-left">
         <div class="sidebar-tabs">
           <button class="tab-btn active" data-tab="alltools" title="All tools">Tools</button>
+          <button class="tab-btn" data-tab="symbols" title="Tool Palette — AEC &amp; NEN 1414 Symbols">⊞ Symbols</button>
           <button class="tab-btn" data-tab="layout" title="Page Layout &amp; Split View Options">◫ Layout</button>
           <button class="tab-btn" data-tab="pages" title="Page Thumbnails">Pages</button>
           <button class="tab-btn" data-tab="bookmarks" title="Document Outline">Outline</button>
@@ -259,6 +326,28 @@
             <span id="craft-rail-filter-badge" class="craft-rail-badge">All</span>
           </div>
           <div id="craft-rail-list" class="craft-rail-list"></div>
+        </div>
+        <div id="panel-symbols" class="tab-panel">
+          <div class="symbol-palette-panel">
+            <div class="sym-palette-top">
+              <div class="sym-palette-title-row">
+                <strong>⠿ Tool Palette</strong>
+                <div class="sym-scale-wrap">
+                  <label for="symbol-scale-select">Scale</label>
+                  <select id="symbol-scale-select">
+                    <option value="0.5">0.5x</option>
+                    <option value="0.75">0.75x</option>
+                    <option value="1" selected>1x</option>
+                    <option value="1.5">1.5x</option>
+                    <option value="2">2x</option>
+                    <option value="3">3x</option>
+                  </select>
+                </div>
+              </div>
+              <input id="symbol-search" type="search" placeholder="Search symbols (IFC, Electrical, NEN 1414)..." autocomplete="off" />
+            </div>
+            <div id="symbol-palette-list" class="symbol-palette-list"></div>
+          </div>
         </div>
         <div id="panel-layout" class="tab-panel">
           <div class="layout-options-panel">
@@ -492,6 +581,7 @@
             <button id="btn-next-page" class="btn-icon" disabled>&gt;</button>
           </div>
           <div id="tool-hint" class="tool-hint">Select a tool or open a PDF to begin.</div>
+          <span id="status-stats-pill" class="status-stats-pill mono" title="Document &amp; Annotation Statistics">Statistics: 0 markups</span>
         </footer>
       </section>
 
@@ -508,6 +598,16 @@
             <button type="button" id="btn-collapse-inspector" class="btn-icon btn-sm" title="Collapse Properties panel">»</button>
           </div>
         </div>
+        <details class="prop-section" open>
+          <summary class="prop-summary"><span>Document &amp; Annotations</span></summary>
+          <div class="prop-body doc-meta-grid">
+            <div class="doc-meta-row"><span>File</span><strong id="doc-info-file">No file open</strong></div>
+            <div class="doc-meta-row"><span>Pages</span><strong id="doc-info-pages">-</strong></div>
+            <div class="doc-meta-row"><span>Page Size</span><strong id="doc-info-size">-</strong></div>
+            <div class="doc-meta-row"><span>Total Markups</span><strong id="annot-info-total">0</strong></div>
+            <div class="doc-meta-row"><span>On Page</span><strong id="annot-info-page">0 (page 1)</strong></div>
+          </div>
+        </details>
         <details class="prop-section" id="props-card" open>
           <summary class="prop-summary">
             <span>Properties &amp; Style</span>

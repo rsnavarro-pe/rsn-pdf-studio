@@ -13,6 +13,7 @@ import { syncPropsCardFromState } from './markup-props.js';
 import { isWorkbenchForced, isInspectorCollapsed } from './workbench-ui.js';
 import { hasZoomHistory } from './pdf-engine.js';
 import { renderLayoutViews } from './layout-view.js';
+import { syncDocAndAnnotationInspector } from './symbol-palette.js';
 
 const TOOL_HINTS = {
   select: 'Click to select, drag to move, or Shift+Drag to zoom into any region.',
@@ -43,6 +44,10 @@ const TOOL_HINTS = {
   edittext: 'Click any existing text on the PDF to auto-detect its font, size & opacity and edit in place.',
   text: 'Click anywhere on the sheet to place a text note.',
   stamp: 'Click anywhere on the sheet to place the selected stamp.',
+  symbol: 'Click anywhere on the sheet to place the active AEC / NEN 1414 symbol.',
+  arc: 'Click and drag between two points to draw a curved CAD arc.',
+  hatch: 'Click and drag to draw a 45° cross-hatched area zone.',
+  star: 'Click and drag to draw a 5-point star marker.',
 };
 
 export function renderUI() {
@@ -106,6 +111,7 @@ export function renderUI() {
   renderMarkupsInspector();
   renderTakeoffSummary();
   syncPropsCardFromState();
+  syncDocAndAnnotationInspector();
   renderOverlay();
   renderComparison();
   renderLayoutViews();

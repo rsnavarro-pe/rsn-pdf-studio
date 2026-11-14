@@ -13,14 +13,16 @@ export async function extractPageSnapPoints(page, OPS) {
   const pts = [];
   const seen = new Set();
 
-  const addPt = (x, y) => {
+  const addPt = (x, y, kind = 'endpoint') => {
     const px = ctm[0] * x + ctm[2] * y + ctm[4];
     const py = pageH - (ctm[1] * x + ctm[3] * y + ctm[5]);
-    if (!Number.isFinite(px) || !Number.isFinite(py)) return;
-    const key = `${Math.round(px * 2)},${Math.round(py * 2)}`;
-    if (seen.has(key)) return;
-    seen.add(key);
-    pts.push({ x: px, y: py });
+    if (!Number.isFinite(px) || !Number.isFinite(py)) return null;
+    const key = `${kind}:${Math.round(px * 2)},${Math.round(py * 2)}`;
+    if (!seen.has(key)) {
+      seen.add(key);
+      pts.push({ x: px, y: py, kind });
+    }
+    return { x: px, y: py };
   };
 
   for (let i = 0; i < opList.fnArray.length; i++) {
@@ -36,38 +38,56 @@ export async function extractPageSnapPoints(page, OPS) {
     } else if (fn === OPS.constructPath) {
       const [ops, coords] = args;
       let idx = 0;
+      let prev = null;
       for (const subOp of ops) {
-        if (subOp === OPS.moveTo || subOp === OPS.lineTo) {
-          addPt(coords[idx++], coords[idx++]);
+        if (subOp === OPS.moveTo) {
+          prev = addPt(coords[idx++], coords[idx++], 'startpoint');
+        } else if (subOp === OPS.lineTo) {
+          const cur = addPt(coords[idx++], coords[idx++], 'endpoint');
+          if (prev && cur) {
+            pts.push({ x: (prev.x + cur.x) / 2, y: (prev.y + cur.y) / 2, kind: 'midpoint' });
+            pts.push({ x: cur.x, y: cur.y, kind: 'vertex' });
+          }
+          prev = cur;
         } else if (subOp === OPS.curveTo) {
           idx += 4;
-          addPt(coords[idx++], coords[idx++]);
+          prev = addPt(coords[idx++], coords[idx++], 'vertex');
         } else if (subOp === OPS.curveTo2 || subOp === OPS.curveTo3) {
           idx += 2;
-          addPt(coords[idx++], coords[idx++]);
+          prev = addPt(coords[idx++], coords[idx++], 'vertex');
         } else if (subOp === OPS.rectangle) {
           const x = coords[idx++], y = coords[idx++], w = coords[idx++], h = coords[idx++];
-          addPt(x, y); addPt(x + w, y); addPt(x + w, y + h); addPt(x, y + h);
+          const c1 = addPt(x, y, 'vertex'), c2 = addPt(x + w, y, 'vertex');
+          const c3 = addPt(x + w, y + h, 'vertex'), c4 = addPt(x, y + h, 'vertex');
+          addPt(x + w / 2, y + h / 2, 'center');
+          if (c1 && c2) pts.push({ x: (c1.x + c2.x) / 2, y: (c1.y + c2.y) / 2, kind: 'midpoint' });
+          if (c2 && c3) pts.push({ x: (c2.x + c3.x) / 2, y: (c2.y + c3.y) / 2, kind: 'midpoint' });
+          if (c3 && c4) pts.push({ x: (c3.x + c4.x) / 2, y: (c3.y + c4.y) / 2, kind: 'midpoint' });
+          if (c4 && c1) pts.push({ x: (c4.x + c1.x) / 2, y: (c4.y + c1.y) / 2, kind: 'midpoint' });
         }
       }
-    } else if (fn === OPS.moveTo || fn === OPS.lineTo) {
-      addPt(args[0], args[1]);
+    } else if (fn === OPS.moveTo) {
+      addPt(args[0], args[1], 'startpoint');
+    } else if (fn === OPS.lineTo) {
+      addPt(args[0], args[1], 'endpoint');
     } else if (fn === OPS.rectangle) {
       const [x, y, w, h] = args;
-      addPt(x, y); addPt(x + w, y); addPt(x + w, y + h); addPt(x, y + h);
+      addPt(x, y, 'vertex'); addPt(x + w, y, 'vertex'); addPt(x + w, y + h, 'vertex'); addPt(x, y + h, 'vertex');
+      addPt(x + w / 2, y + h / 2, 'center');
     }
-    if (pts.length >= 12000) break;
+    if (pts.length >= 16000) break;
   }
 
   return pts;
 }
 
-export function findNearestSnap(pt, snapPoints, thresholdPt) {
+export function findNearestSnap(pt, snapPoints, thresholdPt, snapModes = null) {
   if (!snapPoints || !snapPoints.length) return { pt, snapped: false };
   let best = null;
   let bestD2 = thresholdPt * thresholdPt;
   for (let i = 0; i < snapPoints.length; i++) {
     const sp = snapPoints[i];
+    if (snapModes && sp.kind && snapModes[sp.kind] === false) continue;
     const dx = sp.x - pt.x;
     const dy = sp.y - pt.y;
     const d2 = dx * dx + dy * dy;
@@ -76,7 +96,7 @@ export function findNearestSnap(pt, snapPoints, thresholdPt) {
       best = sp;
     }
   }
-  return best ? { pt: best, snapped: true } : { pt, snapped: false };
+  return best ? { pt: best, snapped: true, kind: best.kind || 'endpoint' } : { pt, snapped: false };
 }
 
 function mulMat(m1, m2) {

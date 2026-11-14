@@ -177,6 +177,19 @@ export async function exportAnnotatedPdf() {
     } else if (m.type === 'stamp' && m.points.length >= 1) {
       const stamp = m.stampData || { kind: 'badge', id: m.text || 'APPROVED', color: m.color };
       drawStampPdf(page, m.points[0], stamp, font, rgb, hexToRgb);
+    } else if (m.type === 'symbol' && m.points.length >= 1) {
+      const p = m.points[0], sym = m.symbolData || { code: m.text || 'SYM', scale: 1 };
+      const s = (sym.scale || 1) * 12, py = toPdfY(p.y);
+      page.drawRectangle({ x: p.x - s, y: py - s * 0.75, width: s * 2, height: s * 1.5, color: rgb(1, 1, 1), borderColor: color, borderWidth: 1.5 });
+      page.drawText(String(sym.code || 'SYM'), { x: p.x - s * 0.65, y: py - 3.5, size: Math.max(7, 8 * (sym.scale || 1)), font, color });
+    } else if ((m.type === 'arc' || m.type === 'hatch' || m.type === 'star') && m.points.length >= 2) {
+      const [a, b] = m.points;
+      if (m.type === 'arc') {
+        const r = Math.max(8, Math.hypot(b.x - a.x, b.y - a.y) * 0.72);
+        page.drawSvgPath(`M ${a.x} ${a.y} A ${r} ${r} 0 0 1 ${b.x} ${b.y}`, { x: 0, y: height, borderColor: color, borderWidth: sw });
+      } else {
+        page.drawRectangle({ x: Math.min(a.x, b.x), y: toPdfY(Math.max(a.y, b.y)), width: Math.abs(b.x - a.x), height: Math.abs(b.y - a.y), borderColor: color, borderWidth: sw });
+      }
     }
   }
 
