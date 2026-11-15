@@ -61,9 +61,11 @@ export const state = {
   compare: {
     active: false,
     mode: 'overlay', // overlay | side-by-side
+    palette: 'red-cyan', // red-cyan | red-green | teal-overlay
     revBBytes: null,
     revBName: '',
-    opacity: 0.6,
+    opacity: 0.85,
+    diffMetrics: null,
   },
 
   // Page Layout & Split View (Single/Two-Page Spread & No Split/Vertical/Horizontal Split)

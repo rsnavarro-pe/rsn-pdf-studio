@@ -15,6 +15,31 @@ This logbook tracks bi-weekly upstream checks against open-source PDF & CAD refe
 
 ## Release & Integration History
 
+### `v1.8.0` — 2026-11-15 (Composite Revision Difference Engine, Digital Signature & Integrity Audit, Print to True Scale & BOQ Submittal Reports)
+- **Open PDF Studio Composite Revision Difference Engine (`js/compare.js`, `#compare-bar`):**
+  - Upgraded revision comparison from simple overlay to full composite difference rendering matching OpenAEC Open PDF Studio standards:
+    - Red (`#dc2626`) highlighting for elements removed in Rev B (Rev A only).
+    - Cyan (`#0891b2`) or Emerald (`#16a34a`) highlighting for elements added in Rev B (Rev B only).
+    - Dark Slate (`#1e293b`) blending for unchanged common drawing geometry.
+    - Selectable color palettes (`Red / Cyan Diff (OpenAEC)`, `Red / Green Diff`, and `Teal Rev B Overlay`).
+  - Added quantitative difference metrics: live `% Area Difference` badge and modified pixel count (`#compare-diff-pill`).
+- **PDFCraft Digital Signature & Document Integrity Audit (`js/signature.js`, `#sig-verify-modal`):**
+  - Integrated digital signature validation and structural inspection aligned with PDFCraft `v2026.11.08`:
+    - Scans for `/Type /Sig`, `/ByteRange`, `/Contents`, `/SubFilter`, Signer CN, Date, Reason, and Location.
+    - Computes whole-file SHA-256 integrity hash via native `crypto.subtle`.
+    - Detects whether signatures cover 100% of document bytes (`VALID_INTACT`) or if post-signing revisions/bytes were appended (`REVISED_AFTER_SIGNING`).
+    - Added one-click JSON Audit Certificate export (`sig-verify-export-cert`).
+- **True Scale Technical Drawing Printing (`js/print-engine.js`, `#print-scale-modal`, `Ctrl+P`):**
+  - Added dedicated AEC technical drawing printing engine that bypasses browser print margin distortions.
+  - Supports 1:1 Actual Size (preserving calibrated engineering scales such as 1/4"=1' or 1:50) and Fit to Page with custom quality options (300 DPI vector plot quality or 150 DPI draft).
+  - Bakes vector annotations/markups using `buildAnnotatedPdfBytes()` for full print fidelity.
+- **AcroForm Form-Data Extraction & Submittal Takeoff Reports (`js/pdf-tools-extra.js`, `js/takeoff.js`):**
+  - Added `exportFormFields()` supporting one-click JSON and CSV export of all AcroForm field values.
+  - Added `exportBoqSummaryReport()` generating itemized Markdown submittal takeoff reports with trade breakdown, lineal/area/volume metrics, extended costs, and professional PE/Architect review sign-off blocks.
+- **Keyboard Workflow Enhancements (`js/main.js`):**
+  - Added `Ctrl+P` / `Cmd+P` shortcut for Print Drawing to True Scale.
+  - Added `Ctrl+A` / `Cmd+A` shortcut in Select mode to quickly select/toggle markups on the current sheet.
+
 ### `v1.7.0` — 2026-11-14 (Open PDF Studio Drawing Ribbon, Granular OSNAP, Modify/Clipboard & AEC / NEN 1414 Symbol Palette)
 - **Upstream Alignment (`https://open-pdf-studio.open-aec.com` v2026.44.8):**
   - **Expanded Drawing Ribbon (`#draw-subtoolbar`):** Structured into `SELECTION` (`Select`, `Hand`, `Region`), `DRAW` (`Line`, `Arrow`, `Polyline`, `Polygon`, `Rect`, `Ellipse`, `Arc`, `Cloud`, `Hatch`, `Star`, `Callout`, `Pen`, `Highlight`, `Eraser`), `SNAP` (`Object snap` master toggle + `Endpoint`, `Midpoint`, `Vertex`, `Start point`, `Center` checkboxes with distinct snap glyphs), `MODIFY` (`Rotate CW`, `Rotate CCW`, `Flip H`, `Flip V`, `Duplicate`), `CLIPBOARD` (`Copy`, `Paste`, `Cut`), and `COLLECTION` (`Palette`, `Save Sym`).
@@ -52,6 +77,25 @@ This logbook tracks bi-weekly upstream checks against open-source PDF & CAD refe
 ---
 
 ## Bi-Weekly Upstream Sync Log
+
+### Sync #2 — 2026-11-15 (`v1.8.0` Bi-Weekly Sync: Composite Revision Diff, Signature Verification, Print to Scale & BOQ Reporting)
+- **Sync Date:** `2026-11-15`
+- **Target Version:** `v1.8.0`
+- **Upstream Changes Detected (`OpenAEC-Foundation/open-pdf-studio` & `storytold/pdfcraft` / `PDFCraftTool/pdfcraft`):**
+  - **`PDFCraftTool/pdfcraft` (`v2026.11.08` / `v2026.10.29` / `v2026.10.20`):** Cryptographic/structural PDF signature verification (`validate-signature`), AcroForm field value extraction, thumbnail selection shortcuts (`Ctrl+A`), print shortcuts (`Ctrl+P`) with print state persistence.
+  - **`OpenAEC-Foundation/open-pdf-studio` (`v2026.45.0`):** Dual-mode revision comparison (side-by-side and color-coded overlay difference with change tracking), 1:1 true scale technical drawing printing without margin distortion, takeoff BOQ reporting.
+- **Features / Fixes Integrated into RSN PDF Studio:**
+  - Full composite revision difference engine (`js/compare.js`) with Red/Cyan and Red/Green diff palettes, unchanged geometry slate blending, and live % area difference / pixel count readout.
+  - Digital signature verification and security dictionary auditor (`js/signature.js`, `#sig-verify-modal`): `/ByteRange` coverage, SHA-256 fingerprint, post-signing modification detection, audit certificate JSON export.
+  - True scale technical drawing print engine (`js/print-engine.js`, `#print-scale-modal`, `Ctrl+P`) rendering 300 DPI vector plot quality at 1:1 scale with annotations baked in.
+  - AcroForm form data export to JSON & CSV (`js/pdf-tools-extra.js`).
+  - Itemized Markdown BOQ Submittal Takeoff Report generator (`js/takeoff.js`) with professional certification sign-off block.
+- **Verification & Test Suite Status:**
+  - Verified all 39 ES modules with `node --check` (`0` syntax errors).
+  - Verified all DOM ID bindings (`0` missing static IDs).
+  - All modular source files maintained under strict line limits (<250 lines per modular engine, <300 lines per existing UI module).
+
+---
 
 ### Sync #1 — 2026-11-14 (`v1.4.0` Verification & Upstream Baseline)
 - **Sync Date:** `2026-11-14`

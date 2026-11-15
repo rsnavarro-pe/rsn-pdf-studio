@@ -179,6 +179,21 @@ export async function inspectPdfFormFields(arrayBuffer) {
   });
 }
 
+export async function exportFormFields(arrayBuffer, baseName, format = 'json', onStatus = () => {}) {
+  const fields = await inspectPdfFormFields(arrayBuffer);
+  if (!fields || !fields.length) throw new Error('No AcroForm fields detected in this PDF.');
+  const clean = baseName.replace(/\.pdf$/i, '');
+  if (format === 'json') {
+    const data = Object.fromEntries(fields.map((f) => [f.name, f.value]));
+    triggerDownload(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }), `${clean}_form_data.json`);
+    onStatus(`Exported ${fields.length} form field values to ${clean}_form_data.json.`);
+  } else {
+    const rows = [['Field_Name', 'Field_Value'], ...fields.map((f) => [`"${f.name.replace(/"/g, '""')}"`, `"${String(f.value).replace(/"/g, '""')}"`])];
+    triggerDownload(new Blob([rows.map((r) => r.join(',')).join('\n')], { type: 'text/csv;charset=utf-8;' }), `${clean}_form_data.csv`);
+    onStatus(`Exported ${fields.length} form field values to ${clean}_form_data.csv.`);
+  }
+}
+
 export async function fillOrFlattenPdfForm(arrayBuffer, baseName, pairsText, flatten, onStatus) {
   const { PDFDocument } = window.PDFLib;
   const doc = await PDFDocument.load(arrayBuffer);

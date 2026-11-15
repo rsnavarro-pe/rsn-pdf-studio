@@ -18,7 +18,8 @@ import { initSearch } from './search.js';
 import { bindTakeoffEvents } from './takeoff.js';
 import { scheduleAutoSave, restoreLastSession, exportProjectJson, importProjectJson } from './storage.js';
 import { initMarkupProps } from './markup-props.js';
-import { initSignatureModal } from './signature.js';
+import { initSignatureModal, initSignatureInspector } from './signature.js';
+import { initPrintModal, openPrintModal } from './print-engine.js';
 import { initWorkbenchUI, recordRecentFile, clearWorkbenchForce } from './workbench-ui.js';
 import { initLayoutView, getSpreadCompanionPage } from './layout-view.js';
 import { initSymbolPalette } from './symbol-palette.js';
@@ -40,6 +41,8 @@ async function init() {
   bindKeyboardShortcuts();
   initPdfTools();
   initSignatureModal();
+  initSignatureInspector();
+  initPrintModal();
   initLayoutView();
   initSymbolPalette();
   initWorkbenchUI(async () => {
@@ -81,6 +84,7 @@ function bindFileEvents() {
   });
 
   document.getElementById('btn-export-pdf').addEventListener('click', exportAnnotatedPdf);
+  document.getElementById('btn-print-scale')?.addEventListener('click', openPrintModal);
   document.getElementById('btn-export-dxf').addEventListener('click', async () => {
     if (!state.pdfBytes) return;
     const hint = document.getElementById('tool-hint');
@@ -220,6 +224,10 @@ function bindCompareEvents() {
     state.compare.mode = e.target.value;
     notify();
   });
+  document.getElementById('compare-palette-select')?.addEventListener('change', (e) => {
+    state.compare.palette = e.target.value;
+    notify();
+  });
   document.getElementById('compare-opacity').addEventListener('input', (e) => {
     state.compare.opacity = Number(e.target.value) / 100;
     notify();
@@ -259,6 +267,16 @@ function bindKeyboardShortcuts() {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') { e.preventDefault(); undo(); return; }
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') { e.preventDefault(); redo(); return; }
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'p') { e.preventDefault(); openPrintModal(); return; }
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'a' && state.activeTool === 'select') {
+      e.preventDefault();
+      const onPage = state.markups.filter((m) => m.page === state.currentPage);
+      if (onPage.length > 0) {
+        state.selectedId = state.selectedId ? null : onPage[0].id;
+        notify();
+      }
+      return;
+    }
     if (e.key === 'Delete' || e.key === 'Backspace') { deleteSelectedMarkup(); return; }
     if (e.key === '=' || e.key === '+') { state.zoom = Math.min(12, +(state.zoom * 1.25).toFixed(3)); await renderCurrentPage(); return; }
     if (e.key === '-') { state.zoom = Math.max(0.15, +(state.zoom / 1.25).toFixed(3)); await renderCurrentPage(); return; }

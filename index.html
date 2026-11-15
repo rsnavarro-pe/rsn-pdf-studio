@@ -115,6 +115,7 @@
                 <div class="craft-dd-col">
                   <div class="craft-dd-group-title">SIGNATURES, STAMPS &amp; SECURITY</div>
                   <button type="button" id="btn-sign-tool" class="craft-dd-item tool-btn" data-tool="sign"><span class="dd-ico" style="color:#a855f7">✒</span>Fill &amp; Sign (Draw / Type / Upload Signature)</button>
+                  <button type="button" id="btn-verify-signatures" class="craft-dd-item"><span class="dd-ico" style="color:#22c55e">✓</span>Verify Digital Signatures &amp; Document Integrity</button>
                   <button type="button" class="craft-dd-item tool-btn" data-tool="stamp"><span class="dd-ico" style="color:#c084fc">✪</span>Add Engineering Review Stamp</button>
                   <button type="button" class="craft-dd-item" data-open-hub="SECURITY" data-hub-q="AcroForm"><span class="dd-ico" style="color:#818cf8">⌸</span>Prepare, Fill &amp; Flatten AcroForms</button>
                   <button type="button" class="craft-dd-item tool-btn" data-tool="redact"><span class="dd-ico" style="color:#f87171">⬛</span>Redact a PDF (Permanent Blackout)</button>
@@ -164,6 +165,7 @@
                   <button id="btn-load-sample" type="button" class="craft-dd-item">📐 Load Sample Floor Plan</button>
                   <button id="btn-pdf-tools" type="button" class="craft-dd-item">⚡ Open All-in-One PDF Tool Hub</button>
                   <button id="btn-export-pdf" type="button" class="craft-dd-item" disabled>💾 Export Annotated PDF</button>
+                  <button id="btn-print-scale" type="button" class="craft-dd-item" disabled>🖨 Print Drawing to Scale <kbd style="font-size:10px;margin-left:auto">Ctrl+P</kbd></button>
                   <button id="btn-export-dxf" type="button" class="craft-dd-item" disabled>📐 Quick Export Current Page to DXF</button>
                   <button id="btn-export-csv" type="button" class="craft-dd-item" disabled>📊 Export Takeoff CSV</button>
                   <div class="craft-dd-group-title">PROJECT SESSION (.RSN.JSON)</div>
@@ -441,12 +443,18 @@
             <input id="rev-b-input" type="file" accept="application/pdf" hidden />
             <button id="btn-sample-rev-b" class="btn btn-secondary btn-sm">Use Sample Rev B</button>
             <select id="compare-mode-select" class="select-sm">
-              <option value="overlay">Overlay Diff (Red / Teal)</option>
+              <option value="overlay">Overlay Diff (Composite)</option>
               <option value="side-by-side">Side-by-Side</option>
             </select>
+            <select id="compare-palette-select" class="select-sm" title="Diff Color Palette">
+              <option value="red-cyan">Red / Cyan Diff (OpenAEC)</option>
+              <option value="red-green">Red / Green Diff</option>
+              <option value="teal-overlay">Teal Rev B Overlay</option>
+            </select>
+            <span id="compare-diff-pill" class="badge" style="background:#183b3b;color:#d5dfc5;padding:3px 8px;border-radius:4px;font-family:monospace;font-size:11px;" title="Revision diff statistics">Comparing...</span>
             <label class="opacity-control">
               Rev B Opacity
-              <input id="compare-opacity" type="range" min="0" max="100" value="60" />
+              <input id="compare-opacity" type="range" min="0" max="100" value="85" />
             </label>
             <button id="btn-compare-close" class="btn btn-secondary btn-sm">Exit Compare</button>
           </div>
@@ -747,9 +755,12 @@
               <div class="summary-row"><span>Total Count:</span><strong id="sum-count" class="mono">0 EA</strong></div>
             </div>
             <div id="boq-list" class="boq-list"></div>
-            <div class="boq-footer">
+            <div class="boq-footer" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;justify-content:space-between">
               <span>Est. Total: <strong id="boq-grand-total" class="mono">$0.00</strong></span>
-              <button id="btn-export-boq" class="btn btn-primary btn-sm" disabled>Export BOQ</button>
+              <div style="display:flex;gap:4px">
+                <button id="btn-export-boq" class="btn btn-primary btn-sm" disabled title="Export itemized BOQ to CSV">Export CSV</button>
+                <button id="btn-export-boq-report" class="btn btn-secondary btn-sm" disabled title="Export professional Markdown submittal report">Report (MD)</button>
+              </div>
             </div>
           </div>
         </details>
@@ -1214,6 +1225,73 @@
       <div class="modal-actions">
         <button id="sign-cancel" type="button" class="btn btn-secondary">Cancel</button>
         <button id="sign-apply" type="button" class="btn btn-primary">Use &amp; Place on Sheet</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Digital Signature & Document Integrity Audit Modal -->
+  <div id="sig-verify-modal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-card modal-wide">
+      <h3>Digital Signature &amp; Document Integrity Audit</h3>
+      <p class="modal-desc">Cryptographic and structural inspection of PDF /Type /Sig security dictionaries, ByteRange envelopes, and document SHA-256 hash.</p>
+      <div id="sig-verify-readout" style="max-height:280px;overflow-y:auto;margin:12px 0;"></div>
+      <div class="modal-actions">
+        <button id="sig-verify-export-cert" type="button" class="btn btn-secondary">Export Audit Certificate (.json)</button>
+        <button id="sig-verify-close" type="button" class="btn btn-primary">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Print Drawing to Scale Modal -->
+  <div id="print-scale-modal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <h3>Print Drawing to True Scale</h3>
+      <p class="modal-desc">Print technical drawings without browser fit-scaling distortions so 1:1 and calibrated scales remain physical-ruler accurate.</p>
+      
+      <div class="prop-row">
+        <span>Document:</span>
+        <strong id="print-scale-docname" style="font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px">Drawing</strong>
+      </div>
+      <div class="prop-row">
+        <span>Sheet Size:</span>
+        <strong id="print-scale-sheet-size" class="mono" style="font-size:12px">24.0" × 36.0"</strong>
+      </div>
+      <div class="prop-row">
+        <span>Calibration:</span>
+        <strong id="print-scale-calib" style="color:var(--color-terracotta);font-size:12px">1/4" = 1'</strong>
+      </div>
+
+      <div class="prop-row">
+        <label for="print-scale-mode">Print Sizing</label>
+        <select id="print-scale-mode" class="select-sm">
+          <option value="true-scale">1:1 Actual Size (Preserve Calibrated Scale)</option>
+          <option value="fit">Fit to Printable Area</option>
+        </select>
+      </div>
+
+      <div class="prop-row">
+        <label for="print-scale-scope">Pages to Print</label>
+        <select id="print-scale-scope" class="select-sm">
+          <option value="current">Current Page Only</option>
+          <option value="all">All Pages</option>
+        </select>
+      </div>
+
+      <div class="prop-row">
+        <label for="print-scale-quality">Plotter Quality</label>
+        <select id="print-scale-quality" class="select-sm">
+          <option value="300">High Resolution (300 DPI - Vector Plot Quality)</option>
+          <option value="150">Standard Draft (150 DPI)</option>
+        </select>
+      </div>
+
+      <div style="background:var(--lcd-bg);padding:8px 10px;border-radius:4px;font-size:11px;color:var(--text-muted);margin:8px 0;line-height:1.4">
+        💡 <strong>Tip for Scale Accuracy:</strong> In the browser's system print dialog, make sure <em>Margins</em> are set to <strong>None</strong> and <em>Scale</em> is set to <strong>100% / Actual Size</strong>.
+      </div>
+
+      <div class="modal-actions">
+        <button id="print-scale-cancel" type="button" class="btn btn-secondary">Cancel</button>
+        <button id="print-scale-confirm" type="button" class="btn btn-primary">Print Technical Drawing</button>
       </div>
     </div>
   </div>

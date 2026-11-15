@@ -72,9 +72,11 @@ export function renderUI() {
 
   // Action buttons
   document.getElementById('btn-export-pdf').disabled = !hasDoc;
+  if (document.getElementById('btn-print-scale')) document.getElementById('btn-print-scale').disabled = !hasDoc;
   document.getElementById('btn-export-dxf').disabled = !hasDoc;
   document.getElementById('btn-export-csv').disabled = !hasDoc || state.markups.length === 0;
   document.getElementById('btn-export-boq').disabled = !hasDoc || state.markups.length === 0;
+  if (document.getElementById('btn-export-boq-report')) document.getElementById('btn-export-boq-report').disabled = !hasDoc || state.markups.length === 0;
   document.getElementById('btn-save-project').disabled = !hasDoc;
   document.getElementById('btn-find').disabled = !hasDoc;
   document.getElementById('btn-osnap').classList.toggle('active', state.osnap);

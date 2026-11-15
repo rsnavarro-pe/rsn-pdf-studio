@@ -8,8 +8,8 @@ import {
   formatLength, formatArea, buildRevisionCloudPath,
 } from './geometry.js';
 
-export async function exportAnnotatedPdf() {
-  if (!state.pdfBytes) return;
+export async function buildAnnotatedPdfBytes() {
+  if (!state.pdfBytes) return null;
   const { PDFDocument, StandardFonts, rgb } = window.PDFLib;
   const doc = await PDFDocument.load(state.pdfBytes.slice());
   const font = await doc.embedFont(StandardFonts.HelveticaBold);
@@ -193,7 +193,12 @@ export async function exportAnnotatedPdf() {
     }
   }
 
-  const outBytes = await doc.save();
+  return await doc.save();
+}
+
+export async function exportAnnotatedPdf() {
+  const outBytes = await buildAnnotatedPdfBytes();
+  if (!outBytes) return;
   const base = (state.pdfName || 'document').replace(/\.pdf$/i, '');
   downloadBlob(new Blob([outBytes], { type: 'application/pdf' }), `${base}_annotated.pdf`);
 }
