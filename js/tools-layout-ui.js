@@ -1,5 +1,5 @@
 /**
- * UI bindings for PDFCraft-inspired tools (N-Up, Page Numbers, Visual Transforms, Reorder/Blanks, Metadata).
+ * UI bindings for layout and page tools (N-Up, Page Numbers, Visual Transforms, Reorder/Blanks, Metadata).
  */
 import { state } from './state.js';
 import {
@@ -9,7 +9,7 @@ import {
   reorderOrBlankPdf,
   readPdfMetadata,
   editMetadataPdf,
-} from './pdf-tools-craft.js';
+} from './pdf-tools-layout.js';
 import {
   cropPdfPages,
   extractTablesToCsv,
@@ -32,7 +32,7 @@ function bindCurrentAndFile(prefix, handler, setStatus, runSafe, requireOpenPdf)
   });
 }
 
-export function initCraftTools(setStatus, runSafe, requireOpenPdf) {
+export function initLayoutTools(setStatus, runSafe, requireOpenPdf) {
   // Bates & Watermark
   bindCurrentAndFile('tool-bates', (buf, name) => applyBatesAndWatermark(buf, name, {
     watermark: document.getElementById('tool-wm-text').value,

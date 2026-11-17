@@ -9,7 +9,7 @@ import { exportPdfToDxf } from './pdf-to-dxf.js';
 import { dxfTextToPdfBytes } from './dxf-to-pdf.js';
 import { dwgBytesToPdfBytes } from './dwg-to-pdf.js';
 import { loadPdfA } from './pdf-engine.js';
-import { initCraftTools } from './tools-craft-ui.js';
+import { initLayoutTools } from './tools-layout-ui.js';
 import { clearWorkbenchForce } from './workbench-ui.js';
 
 export function initPdfTools() {
@@ -242,7 +242,7 @@ export function initPdfTools() {
   document.getElementById('tool-blank-open')?.addEventListener('click', () => runSafe(setStatus, () => buildBlank(true)));
   document.getElementById('tool-blank-download')?.addEventListener('click', () => runSafe(setStatus, () => buildBlank(false)));
 
-  initCraftTools(setStatus, runSafe, requireOpenPdf);
+  initLayoutTools(setStatus, runSafe, requireOpenPdf);
 }
 
 async function createBlankPdfBytes({ size, orient, style, pages }) {

@@ -1,5 +1,5 @@
 /**
- * Additional client-side PDF tools inspired by PDFCraft:
+ * Additional client-side PDF tools:
  * N-Up layout, Page Numbers/Headers, Grayscale/Flatten, Reverse/Blank pages, Metadata Editor/Stripper.
  */
 import { triggerDownload } from './pdf-tools-org.js';

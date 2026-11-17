@@ -1,6 +1,6 @@
 /**
  * Electronic Signature & Digital Signature Verification Engine.
- * Aligned with PDFCraft v2026.11 signature validation standards:
+ * Aligned with standard PDF signature validation practices:
  * - Pad for drawing, typing, or uploading electronic signatures
  * - Cryptographic / Structural inspection of PDF /Type /Sig & /ByteRange envelopes
  * - Document SHA-256 integrity calculation and revision tampering detection

@@ -1,5 +1,5 @@
 /**
- * Phase 1–4 PDFCraft-inspired tools:
+ * Phase 1–4 PDF tools:
  * - Crop / Trim Page Margins
  * - Extract PDF Tables / Structured Text to CSV
  * - One-Click Multi-Step Workflow Pipelines

@@ -1,5 +1,5 @@
 /**
- * PdfCraft-inspired Workbench UI: 5 Main Category Dropdown Tabs, Left "All tools" Rail,
+ * Workbench UI: 5 Main Category Dropdown Tabs, Left "All tools" Rail,
  * Dynamic Category Cards, Command Search (⌘K), Pinned Tools, Recent Files & Inspector Drawer.
  */
 import { state, setTool, notify } from './state.js';

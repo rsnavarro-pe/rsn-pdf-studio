@@ -1,6 +1,6 @@
 # RSN PDF Studio — Upstream Sync & Versioning Logbook
 
-This logbook tracks bi-weekly upstream checks against open-source PDF & CAD reference repositories (**OpenPDF Studio** and **PDFCraft**), along with all integrated features, architectural improvements, and version releases in **RSN PDF Studio**.
+This logbook tracks bi-weekly upstream checks against open-source PDF & CAD reference repositories (**Open PDF Studio**), along with all integrated features, architectural improvements, and version releases in **RSN PDF Studio**.
 
 ---
 
@@ -9,7 +9,6 @@ This logbook tracks bi-weekly upstream checks against open-source PDF & CAD refe
 | Upstream Project | GitHub Repository | Primary Scope / Modules Monitored | Sync Cadence |
 | :--- | :--- | :--- | :--- |
 | **Open PDF Studio** | `OpenAEC-Foundation/open-pdf-studio` | AEC & Engineering PDF annotations, scale calibration, quantity takeoff (BOQ), multi-leader callouts/arrows, revision clouds, CAD (`.dwg` / `.dxf`) vector conversion, OSNAP vector snapping | Every 2 weeks (1st & 15th) |
-| **PdfCraft** | `storytold/pdfcraft` (`PDFCraftTool/pdfcraft`) | Dark workbench UI (`All tools`, `Edit`, `Convert`, `E-Sign`, `Measure & CAD`), N-Up multi-page layout, page numbering, grayscale/invert/flatten visual transforms, metadata editor/stripper, AcroForm filler/flattener, table-to-CSV extraction, one-click pipelines | Every 2 weeks (1st & 15th) |
 
 ---
 
@@ -23,8 +22,8 @@ This logbook tracks bi-weekly upstream checks against open-source PDF & CAD refe
     - Dark Slate (`#1e293b`) blending for unchanged common drawing geometry.
     - Selectable color palettes (`Red / Cyan Diff (OpenAEC)`, `Red / Green Diff`, and `Teal Rev B Overlay`).
   - Added quantitative difference metrics: live `% Area Difference` badge and modified pixel count (`#compare-diff-pill`).
-- **PDFCraft Digital Signature & Document Integrity Audit (`js/signature.js`, `#sig-verify-modal`):**
-  - Integrated digital signature validation and structural inspection aligned with PDFCraft `v2026.11.08`:
+- **Digital Signature & Document Integrity Audit (`js/signature.js`, `#sig-verify-modal`):**
+  - Integrated digital signature validation and structural inspection:
     - Scans for `/Type /Sig`, `/ByteRange`, `/Contents`, `/SubFilter`, Signer CN, Date, Reason, and Location.
     - Computes whole-file SHA-256 integrity hash via native `crypto.subtle`.
     - Detects whether signatures cover 100% of document bytes (`VALID_INTACT`) or if post-signing revisions/bytes were appended (`REVISED_AFTER_SIGNING`).
@@ -48,7 +47,7 @@ This logbook tracks bi-weekly upstream checks against open-source PDF & CAD refe
 
 ### `v1.6.0` — 2026-11-14 (Draw Sub-Toolbar, Single/Two-Page Spreads & Vertical/Horizontal Split View)
 - **New Features Integrated:**
-  - **Dedicated Draw Toolbar (`#draw-subtoolbar`, `✏ Draw`):** Added full drawing and shape suite matching PDFCraft/OpenPDF Studio (`Pen`, `Highlighter`, `Eraser`, `Callout`, `Polyline`, `Polygon`, `Revision Cloud`, `Rectangle`, `Circle/Ellipse`, `Straight Line`, and `Arrow`) with full SVG rendering and native `pdf-lib` export (`js/overlay-draw.js`, `js/overlay.js`, `js/exporter.js`).
+  - **Dedicated Draw Toolbar (`#draw-subtoolbar`, `✏ Draw`):** Added full drawing and shape suite matching Open PDF Studio (`Pen`, `Highlighter`, `Eraser`, `Callout`, `Polyline`, `Polygon`, `Revision Cloud`, `Rectangle`, `Circle/Ellipse`, `Straight Line`, and `Arrow`) with full SVG rendering and native `pdf-lib` export (`js/overlay-draw.js`, `js/overlay.js`, `js/exporter.js`).
   - **Layout Options Panel (`◫ Layout` Tab & Button):**
     - **Page Layout:** Switch between **Single Page** (`📄`) and **Two Page** (`📖`) side-by-side book spread views, plus **Show first page alone** cover-page toggle (`js/layout-view.js`).
     - **Split View:** Switch between **No Split** (`▭`), **Vertical Split** (`◫` side-by-side panes), and **Horizontal Split** (`⊟` top-and-bottom panes) with dual mini-page preview cards, **Change** document/page selectors, **Swap (`⇄`)**, and **Sync scroll and zoom**.
@@ -60,7 +59,7 @@ This logbook tracks bi-weekly upstream checks against open-source PDF & CAD refe
   - **Text Opacity Inspector Control:** Added `#prop-text-opacity` (`10%–100%`) in the Properties & Style panel (`index.html`, `js/markup-props.js`).
 
 ### `v1.4.0` — 2026-11-14 (Baseline Audit, Hardening & Blank PDF Creator)
-- **Upstream Alignment:** Full parity audit against PDFCraft workbench patterns and OpenPDF Studio AEC tools.
+- **Upstream Alignment:** Full parity audit against Open PDF Studio AEC tools.
 - **New Features Integrated:**
   - **Create Blank PDF (`CREATE PDF`):** Added support for Letter, Legal, Tabloid (11×17), A4, A3, ARCH D (24×36), and ARCH E (36×48) sheets in Portrait/Landscape with Plain, Engineering Grid, and Lined Note templates (`js/tools-ui.js`, `js/workbench-ui.js`).
   - **Smooth Region Zoom & Zoom History:** Added marquee region zoom (`Z` or `Shift+Drag`), 60fps ease-out cubic zoom-and-pan transitions (`animateZoomTransition`), Zoom Back stack (`#btn-zoom-back`), Fit Whole Page, and offscreen double-buffered rendering (`js/pdf-engine.js`).
@@ -81,7 +80,7 @@ This logbook tracks bi-weekly upstream checks against open-source PDF & CAD refe
 ### Sync #2 — 2026-11-15 (`v1.8.0` Bi-Weekly Sync: Composite Revision Diff, Signature Verification, Print to Scale & BOQ Reporting)
 - **Sync Date:** `2026-11-15`
 - **Target Version:** `v1.8.0`
-- **Upstream Changes Detected (`OpenAEC-Foundation/open-pdf-studio` & `storytold/pdfcraft` / `PDFCraftTool/pdfcraft`):**
+- **Upstream Changes Detected (`OpenAEC-Foundation/open-pdf-studio`):**
   - **`PDFCraftTool/pdfcraft` (`v2026.11.08` / `v2026.10.29` / `v2026.10.20`):** Cryptographic/structural PDF signature verification (`validate-signature`), AcroForm field value extraction, thumbnail selection shortcuts (`Ctrl+A`), print shortcuts (`Ctrl+P`) with print state persistence.
   - **`OpenAEC-Foundation/open-pdf-studio` (`v2026.45.0`):** Dual-mode revision comparison (side-by-side and color-coded overlay difference with change tracking), 1:1 true scale technical drawing printing without margin distortion, takeoff BOQ reporting.
 - **Features / Fixes Integrated into RSN PDF Studio:**
@@ -101,7 +100,6 @@ This logbook tracks bi-weekly upstream checks against open-source PDF & CAD refe
 - **Sync Date:** `2026-11-14`
 - **Target Version:** `v1.4.0`
 - **Upstream Changes Detected:**
-  - **`storytold/pdfcraft` (`v2026.11.08`):** Non-destructive byte preservation on save, deep undo history, workbench category navigation (`All tools`, `Edit`, `Convert`, `E-Sign`), and fallback font handling.
   - **`OpenAEC-Foundation/open-pdf-studio` (`v2026.45.0`):** CAD vector DWG/DXF import & export with scale preservation, drawing-aware OCR text search, AEC callouts/stamps/clouds, and direct plan scaling.
 - **Features / Fixes Integrated into RSN PDF Studio:**
   - Non-destructive `ArrayBuffer` cloning (`.slice().buffer`) across all PDF/CAD tools so underlying document bytes are never mutated or detached in memory.
@@ -113,6 +111,6 @@ This logbook tracks bi-weekly upstream checks against open-source PDF & CAD refe
 > **Automated Check Template (Appended Every 2 Weeks on the 1st & 15th):**
 > - **Sync Date:** `YYYY-MM-DD`
 > - **Target Version:** `v1.x.y`
-> - **Upstream Changes Detected (`OpenAEC-Foundation/open-pdf-studio` & `storytold/pdfcraft`):**
+> - **Upstream Changes Detected (`OpenAEC-Foundation/open-pdf-studio`):**
 > - **Features / Fixes Integrated into RSN PDF Studio:**
 > - **Verification & Test Suite Status:**
