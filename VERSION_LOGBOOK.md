@@ -1,6 +1,6 @@
 # RSN PDF Studio — Upstream Sync & Versioning Logbook
 
-This logbook tracks bi-weekly upstream checks against open-source PDF & CAD reference repositories (**Open PDF Studio**), along with all integrated features, architectural improvements, and version releases in **RSN PDF Studio**.
+This logbook tracks bi-weekly upstream checks against the Open PDF Studio reference repository, along with all integrated features, architectural improvements, and version releases in **RSN PDF Studio**.
 
 ---
 
