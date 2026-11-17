@@ -61,6 +61,18 @@ async function init() {
     if (snapMaster) snapMaster.checked = state.osnap;
     notify();
   });
+  document.getElementById('btn-view-grid')?.addEventListener('click', (e) => {
+    const on = document.body.classList.toggle('pdf-grid');
+    e.currentTarget.classList.toggle('active', on);
+  });
+  document.getElementById('btn-view-invert')?.addEventListener('click', (e) => {
+    const on = document.body.classList.toggle('pdf-invert');
+    e.currentTarget.classList.toggle('active', on);
+  });
+  document.getElementById('btn-view-fullscreen')?.addEventListener('click', () => {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+    else document.exitFullscreen?.();
+  });
   notify();
   await restoreLastSession(loadPdfA, renderCurrentPage, refreshTakeoffSelectFn);
 }

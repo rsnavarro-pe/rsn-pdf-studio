@@ -323,3 +323,10 @@ body.craft-dark .thumb-item, body.craft-dark .markup-item { background: #26272c;
   background: var(--bg-panel); border-radius: 6px; font-size: 12px; font-weight: 600;
 }
 .page-spread-wrap { display: flex; align-items: flex-start; justify-content: center; gap: 14px; margin: auto; }
+body.pdf-invert #pdf-canvas, body.pdf-invert .spread-canvas { filter: invert(0.92) hue-rotate(180deg); }
+body.pdf-grid #page-stage::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 2;
+  background-image: linear-gradient(to right, rgba(40,123,105,0.14) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(40,123,105,0.14) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
