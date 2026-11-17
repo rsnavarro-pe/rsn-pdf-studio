@@ -30,6 +30,39 @@
 
           <!-- 5 Main Category Tabs with Dropdown Menus -->
           <nav class="craft-top-tabs" aria-label="Main Categories">
+            <!-- File Tab -->
+            <div class="craft-dd-wrap">
+              <button type="button" class="craft-top-tab" data-file-dd="toggle">File <span class="dd-caret">▾</span></button>
+              <div class="craft-dd-menu craft-dd-wide" id="file-export-dd">
+                <div class="craft-dd-col">
+                  <div class="craft-dd-group-title">OPEN &amp; CREATE</div>
+                  <label class="craft-dd-item" for="pdf-file-input" style="cursor:pointer"><span class="dd-ico" style="color:#60a5fa">📁</span>Open PDF(s)… (select multiple) <kbd>Ctrl+O</kbd></label>
+                  <button id="btn-load-sample" type="button" class="craft-dd-item"><span class="dd-ico" style="color:#34d399">📐</span>Open Sample Floor Plan</button>
+                  <button type="button" class="craft-dd-item" data-open-hub="CONVERT" data-hub-q="Blank PDF"><span class="dd-ico" style="color:#34d399">📄</span>New Blank PDF…</button>
+                  <label class="craft-dd-item" for="project-file-input" style="cursor:pointer"><span class="dd-ico" style="color:#a78bfa">📂</span>Open Project (.rsn.json)</label>
+                  <div class="craft-dd-group-title">COMBINE &amp; ORGANIZE</div>
+                  <button id="btn-file-merge" type="button" class="craft-dd-item"><span class="dd-ico" style="color:#4ade80">⊞</span>Merge Open PDFs… (sequential, interleave, ranges)</button>
+                  <button type="button" class="craft-dd-item" data-open-hub="ORGANIZE"><span class="dd-ico" style="color:#4ade80">✂</span>Split, Reorder &amp; Page Tools…</button>
+                  <button type="button" class="craft-dd-item" data-open-hub="OPTIMIZE"><span class="dd-ico" style="color:#fb923c">🗜</span>Compress, Crop &amp; Grayscale…</button>
+                  <button id="btn-pdf-tools" type="button" class="craft-dd-item"><span class="dd-ico" style="color:#818cf8">⚡</span>All-in-One PDF Tool Hub</button>
+                </div>
+                <div class="craft-dd-col">
+                  <div class="craft-dd-group-title">SAVE &amp; EXPORT</div>
+                  <button id="btn-file-save" type="button" class="craft-dd-item" disabled><span class="dd-ico" style="color:#60a5fa">💾</span>Save <kbd>Ctrl+S</kbd></button>
+                  <button id="btn-file-saveas" type="button" class="craft-dd-item" disabled><span class="dd-ico" style="color:#60a5fa">📝</span>Save As… <kbd>Ctrl+Shift+S</kbd></button>
+                  <button id="btn-export-pdf" type="button" class="craft-dd-item" disabled><span class="dd-ico" style="color:#f59e0b">📤</span>Export Annotated Copy (_annotated.pdf)</button>
+                  <button id="btn-save-project" type="button" class="craft-dd-item" disabled><span class="dd-ico" style="color:#a78bfa">📦</span>Save Project (.rsn.json)</button>
+                  <button id="btn-export-dxf" type="button" class="craft-dd-item" disabled><span class="dd-ico" style="color:#2dd4bf">📐</span>Export Current Page to DXF</button>
+                  <button id="btn-export-csv" type="button" class="craft-dd-item" disabled><span class="dd-ico" style="color:#38bdf8">📊</span>Export Takeoff CSV</button>
+                  <button id="btn-print-scale" type="button" class="craft-dd-item" disabled><span class="dd-ico" style="color:#e5e7eb">🖨</span>Print Drawing to Scale… <kbd>Ctrl+P</kbd></button>
+                  <div class="craft-dd-group-title">CLOSE</div>
+                  <button id="btn-file-close" type="button" class="craft-dd-item" disabled><span class="dd-ico" style="color:#fbbf24">✕</span>Close Document <kbd>Ctrl+W</kbd></button>
+                  <button id="btn-file-closeall" type="button" class="craft-dd-item" disabled><span class="dd-ico" style="color:#fbbf24">⊗</span>Close All Documents</button>
+                  <button id="btn-file-exit-menu" type="button" class="craft-dd-item"><span class="dd-ico" style="color:#f87171">⏻</span>Exit</button>
+                </div>
+              </div>
+            </div>
+
             <!-- 1. All tools -->
             <div class="craft-dd-wrap">
               <button type="button" class="craft-top-tab active" data-top-cat="all">All tools <span class="dd-caret">▾</span></button>
@@ -233,27 +266,10 @@
 
           <div class="file-actions">
             <label class="btn btn-primary btn-sm" for="pdf-file-input">📁 Open PDF</label>
-            <input id="pdf-file-input" type="file" accept="application/pdf" hidden />
+            <input id="pdf-file-input" type="file" accept="application/pdf" multiple hidden />
+            <input id="project-file-input" type="file" accept=".json,.rsn.json,application/json" hidden />
 
-            <!-- Consolidated File & Export Dropdown -->
-            <div class="craft-dd-wrap">
-              <button type="button" class="btn btn-secondary btn-sm" data-file-dd="toggle">File &amp; Export ▾</button>
-              <div class="craft-dd-menu craft-dd-right" id="file-export-dd">
-                <div class="craft-dd-col">
-                  <div class="craft-dd-group-title">DOCUMENT &amp; EXPORT</div>
-                  <button id="btn-load-sample" type="button" class="craft-dd-item">📐 Load Sample Floor Plan</button>
-                  <button id="btn-pdf-tools" type="button" class="craft-dd-item">⚡ Open All-in-One PDF Tool Hub</button>
-                  <button id="btn-export-pdf" type="button" class="craft-dd-item" disabled>💾 Export Annotated PDF</button>
-                  <button id="btn-print-scale" type="button" class="craft-dd-item" disabled>🖨 Print Drawing to Scale <kbd style="font-size:10px;margin-left:auto">Ctrl+P</kbd></button>
-                  <button id="btn-export-dxf" type="button" class="craft-dd-item" disabled>📐 Quick Export Current Page to DXF</button>
-                  <button id="btn-export-csv" type="button" class="craft-dd-item" disabled>📊 Export Takeoff CSV</button>
-                  <div class="craft-dd-group-title">PROJECT SESSION (.RSN.JSON)</div>
-                  <button id="btn-save-project" type="button" class="craft-dd-item" disabled>📦 Save Project (.rsn.json)</button>
-                  <label class="craft-dd-item" for="project-file-input" style="cursor:pointer">📂 Load Project (.rsn.json)</label>
-                  <input id="project-file-input" type="file" accept=".json,.rsn.json,application/json" hidden />
-                </div>
-              </div>
-            </div>
+            <button type="button" id="btn-file-exit" class="btn btn-secondary btn-sm" title="Exit — close all documents and return to the Welcome screen">⏻ Exit</button>
 
             <button type="button" id="btn-home-workbench" class="btn-icon btn-sm" title="Switch between Welcome Workbench & Active PDF Canvas">⌂</button>
             <button type="button" id="btn-toggle-inspector" class="btn-icon btn-sm" title="Show / Hide Right Properties Inspector">◨</button>
@@ -263,6 +279,7 @@
       </div>
 
       <!-- Slim Contextual Canvas Bar (Hidden on Welcome Workbench; Shown only when editing a PDF) -->
+  <div id="doc-tabs" class="doc-tabs hidden" role="tablist" aria-label="Open Documents"></div>
       <nav id="slim-canvas-bar" class="slim-canvas-bar hidden" aria-label="Canvas Quick Controls">
         <div class="slim-bar-left">
           <button type="button" id="btn-layout-tab" class="btn-icon btn-sm" title="Layout Options (Single / Two-Page &amp; Vertical / Horizontal Split)">◫ Layout</button>

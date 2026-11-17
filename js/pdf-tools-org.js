@@ -72,7 +72,8 @@ export async function mergePdfs(files, options, onStatus) {
 
   const out = await merged.save({ useObjectStreams: true });
   const outName = mode === 'interleave' ? 'merged_interleaved.pdf' : 'merged_document.pdf';
-  triggerDownload(new Blob([out], { type: 'application/pdf' }), outName);
+  if (options?.onResult) { await options.onResult(out, outName); }
+  if (!options?.skipDownload) triggerDownload(new Blob([out], { type: 'application/pdf' }), outName);
   onStatus(`Merged ${files.length} PDFs (${merged.getPageCount()} pages) into ${outName}.`);
 }
 

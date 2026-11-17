@@ -134,7 +134,11 @@ export function redo() {
   notify();
 }
 
+export const hooks = { beforeLoad: null };
+
 export function clearDocumentState(bytes, name, numPages) {
+  if (!state._reloading) hooks.beforeLoad?.();
+  state.loadSeq = (state.loadSeq || 0) + 1;
   state.pdfBytes = bytes;
   state.pdfName = name;
   state.numPages = numPages;

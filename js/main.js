@@ -23,6 +23,7 @@ import { initPrintModal, openPrintModal } from './print-engine.js';
 import { initWorkbenchUI, recordRecentFile, clearWorkbenchForce } from './workbench-ui.js';
 import { initLayoutView, getSpreadCompanionPage } from './layout-view.js';
 import { initSymbolPalette } from './symbol-palette.js';
+import { initDocManager, openFiles } from './doc-manager.js';
 import { renderUI } from './ui.js';
 
 let pendingCalibratePtSpan = 0;
@@ -45,6 +46,7 @@ async function init() {
   initPrintModal();
   initLayoutView();
   initSymbolPalette();
+  initDocManager();
   initWorkbenchUI(async () => {
     if (!state.pdfBytes) {
       const bytes = await generateSamplePdfBytes(false);
@@ -79,13 +81,9 @@ async function init() {
 
 function bindFileEvents() {
   document.getElementById('pdf-file-input').addEventListener('change', async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    clearWorkbenchForce();
-    const buf = await file.arrayBuffer();
-    await loadPdfA(buf, file.name);
-    recordRecentFile(file.name, state.numPages, buf.byteLength);
+    const files = [...(e.target.files || [])];
     e.target.value = '';
+    await openFiles(files);
   });
 
   document.getElementById('btn-load-sample').addEventListener('click', async () => {

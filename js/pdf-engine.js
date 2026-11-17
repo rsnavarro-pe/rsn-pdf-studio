@@ -38,7 +38,8 @@ export async function loadPdfA(arrayBuffer, fileName) {
 }
 
 export async function reloadPdfPreserving(arrayBuffer, fileName, meta) {
-  await loadPdfA(arrayBuffer, fileName);
+  state._reloading = true;
+  try { await loadPdfA(arrayBuffer, fileName); } finally { state._reloading = false; }
   state.markups = meta.markups || [];
   state.unitsPerPt = meta.unitsPerPt ?? null;
   state.scaleLabel = meta.scaleLabel || 'Not Set';
