@@ -81,7 +81,6 @@ This logbook tracks bi-weekly upstream checks against open-source PDF & CAD refe
 - **Sync Date:** `2026-11-15`
 - **Target Version:** `v1.8.0`
 - **Upstream Changes Detected (`OpenAEC-Foundation/open-pdf-studio`):**
-  - **`PDFCraftTool/pdfcraft` (`v2026.11.08` / `v2026.10.29` / `v2026.10.20`):** Cryptographic/structural PDF signature verification (`validate-signature`), AcroForm field value extraction, thumbnail selection shortcuts (`Ctrl+A`), print shortcuts (`Ctrl+P`) with print state persistence.
   - **`OpenAEC-Foundation/open-pdf-studio` (`v2026.45.0`):** Dual-mode revision comparison (side-by-side and color-coded overlay difference with change tracking), 1:1 true scale technical drawing printing without margin distortion, takeoff BOQ reporting.
 - **Features / Fixes Integrated into RSN PDF Studio:**
   - Full composite revision difference engine (`js/compare.js`) with Red/Cyan and Red/Green diff palettes, unchanged geometry slate blending, and live % area difference / pixel count readout.
