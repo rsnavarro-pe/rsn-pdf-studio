@@ -55,6 +55,85 @@
               </div>
             </div>
 
+            <!-- Dedicated View Tab -->
+            <div class="craft-dd-wrap">
+              <button type="button" class="craft-top-tab" data-top-cat="view">View <span class="dd-caret">▾</span></button>
+              <div class="craft-dd-menu craft-dd-wide" data-dd-for="view">
+                <div class="craft-dd-col">
+                  <div class="craft-dd-group-title">PAGE LAYOUT &amp; SPLIT VIEW</div>
+                  <button type="button" class="craft-dd-item" onclick="document.getElementById('layout-btn-single')?.click()"><span class="dd-ico" style="color:#60a5fa">📄</span>Single Page View</button>
+                  <button type="button" class="craft-dd-item" onclick="document.getElementById('layout-btn-two')?.click()"><span class="dd-ico" style="color:#60a5fa">📖</span>Two Page Spread View</button>
+                  <button type="button" class="craft-dd-item" onclick="document.getElementById('split-btn-vertical')?.click()"><span class="dd-ico" style="color:#34d399">◫</span>Vertical Split View</button>
+                  <button type="button" class="craft-dd-item" onclick="document.getElementById('split-btn-horizontal')?.click()"><span class="dd-ico" style="color:#34d399">⊟</span>Horizontal Split View</button>
+                  <button type="button" class="craft-dd-item" onclick="document.getElementById('split-btn-none')?.click()"><span class="dd-ico" style="color:#9ca3af">▭</span>No Split (Single Pane)</button>
+                  <button type="button" class="craft-dd-item" onclick="document.getElementById('btn-layout-tab')?.click()"><span class="dd-ico" style="color:#a78bfa">⚙</span>Open Layout Options Panel</button>
+                </div>
+                <div class="craft-dd-col">
+                  <div class="craft-dd-group-title">ZOOM, ROTATE &amp; DISPLAY</div>
+                  <button type="button" class="craft-dd-item tool-btn" data-tool="zoombox"><span class="dd-ico" style="color:#60a5fa">🔍</span>Zoom to Region (Marquee) <kbd>Z</kbd></button>
+                  <button type="button" class="craft-dd-item" onclick="document.getElementById('btn-zoom-fit')?.click()"><span class="dd-ico" style="color:#38bdf8">↔</span>Fit Width <kbd>0</kbd></button>
+                  <button type="button" class="craft-dd-item" onclick="document.getElementById('btn-zoom-fit-page')?.click()"><span class="dd-ico" style="color:#38bdf8">⊡</span>Fit Whole Page</button>
+                  <button type="button" class="craft-dd-item" onclick="document.getElementById('btn-rotate')?.click()"><span class="dd-ico" style="color:#fbbf24">↻</span>Rotate Page 90°</button>
+                  <button type="button" class="craft-dd-item" onclick="document.getElementById('btn-view-grid')?.click()"><span class="dd-ico" style="color:#34d399">#</span>Toggle Engineering Grid</button>
+                  <button type="button" class="craft-dd-item" onclick="document.getElementById('btn-view-invert')?.click()"><span class="dd-ico" style="color:#f472b6">◐</span>Invert Colors (Blueprint Mode)</button>
+                  <button type="button" class="craft-dd-item" onclick="document.getElementById('btn-view-fullscreen')?.click()"><span class="dd-ico" style="color:#e5e7eb">⛶</span>Fullscreen Presentation Mode</button>
+                  <button type="button" class="craft-dd-item" onclick="document.getElementById('btn-toggle-inspector')?.click()"><span class="dd-ico" style="color:#9ca3af">◨</span>Show / Hide Properties Panel</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dedicated Drawings Tab -->
+            <div class="craft-dd-wrap">
+              <button type="button" class="craft-top-tab" data-top-cat="drawings">Drawings <span class="dd-caret">▾</span></button>
+              <div class="craft-dd-menu craft-dd-wide" data-dd-for="drawings">
+                <div class="craft-dd-col">
+                  <div class="craft-dd-group-title">CAD &amp; VECTOR SHAPES</div>
+                  <button type="button" class="craft-dd-item" onclick="document.getElementById('btn-draw-bar-toggle')?.click()"><span class="dd-ico" style="color:#f59e0b">✏</span>Toggle Drawing Ribbon</button>
+                  <button type="button" class="craft-dd-item tool-btn" data-tool="line"><span class="dd-ico" style="color:#60a5fa">╱</span>Straight Line</button>
+                  <button type="button" class="craft-dd-item tool-btn" data-tool="arrow"><span class="dd-ico" style="color:#fb923c">↗</span>Leader Arrow</button>
+                  <button type="button" class="craft-dd-item tool-btn" data-tool="polyline"><span class="dd-ico" style="color:#c084fc">⌇</span>Polyline</button>
+                  <button type="button" class="craft-dd-item tool-btn" data-tool="polygon"><span class="dd-ico" style="color:#4ade80">⬠</span>Closed Polygon</button>
+                  <button type="button" class="craft-dd-item tool-btn" data-tool="rect"><span class="dd-ico" style="color:#60a5fa">▭</span>Rectangle</button>
+                  <button type="button" class="craft-dd-item tool-btn" data-tool="ellipse"><span class="dd-ico" style="color:#38bdf8">◯</span>Circle / Ellipse</button>
+                  <button type="button" class="craft-dd-item tool-btn" data-tool="arc"><span class="dd-ico" style="color:#facc15">◜</span>Curved CAD Arc</button>
+                </div>
+                <div class="craft-dd-col">
+                  <div class="craft-dd-group-title">SKETCH, HATCH &amp; SYMBOLS</div>
+                  <button type="button" class="craft-dd-item tool-btn" data-tool="cloud"><span class="dd-ico" style="color:#f87171">☁</span>Revision Cloud <kbd>C</kbd></button>
+                  <button type="button" class="craft-dd-item tool-btn" data-tool="hatch"><span class="dd-ico" style="color:#34d399">▨</span>Cross-Hatch Area Box</button>
+                  <button type="button" class="craft-dd-item tool-btn" data-tool="star"><span class="dd-ico" style="color:#facc15">☆</span>Star / Marker</button>
+                  <button type="button" class="craft-dd-item tool-btn" data-tool="pen"><span class="dd-ico" style="color:#a78bfa">✒</span>Freehand Pen</button>
+                  <button type="button" class="craft-dd-item tool-btn" data-tool="eraser"><span class="dd-ico" style="color:#f87171">⌫</span>Eraser</button>
+                  <button type="button" class="craft-dd-item" onclick="document.querySelector('.sidebar-tabs .tab-btn[data-tab=&quot;symbols&quot;]')?.click()"><span class="dd-ico" style="color:#f59e0b">⊞</span>AEC &amp; NEN 1414 Symbol Palette</button>
+                  <button type="button" class="craft-dd-item" onclick="document.getElementById('btn-osnap')?.click()"><span class="dd-ico" style="color:#38bdf8">⌖</span>Toggle Object Snap (OSNAP)</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dedicated Annotation Tab -->
+            <div class="craft-dd-wrap">
+              <button type="button" class="craft-top-tab" data-top-cat="annotation">Annotation <span class="dd-caret">▾</span></button>
+              <div class="craft-dd-menu craft-dd-wide" data-dd-for="annotation">
+                <div class="craft-dd-col">
+                  <div class="craft-dd-group-title">TEXT &amp; COMMENTING</div>
+                  <button type="button" class="craft-dd-item tool-btn" data-tool="edittext"><span class="dd-ico" style="color:#34d399">✎</span>Edit Existing PDF Text <kbd>E</kbd></button>
+                  <button type="button" class="craft-dd-item tool-btn" data-tool="text"><span class="dd-ico" style="color:#ec4899">T</span>Add Text Box <kbd>T</kbd></button>
+                  <button type="button" class="craft-dd-item tool-btn" data-tool="callout"><span class="dd-ico" style="color:#facc15">💬</span>Callout Leader <kbd>L</kbd></button>
+                  <button type="button" class="craft-dd-item tool-btn" data-tool="note"><span class="dd-ico" style="color:#fbbf24">📌</span>Sticky Note Comment <kbd>N</kbd></button>
+                  <button type="button" class="craft-dd-item tool-btn" data-tool="highlight"><span class="dd-ico" style="color:#facc15">🖍</span>Highlight Text</button>
+                  <button type="button" class="craft-dd-item tool-btn" data-tool="underline"><span class="dd-ico" style="color:#38bdf8"><u>U</u></span>Underline Text</button>
+                  <button type="button" class="craft-dd-item tool-btn" data-tool="strike"><span class="dd-ico" style="color:#f87171"><s>S</s></span>Strikethrough Text</button>
+                </div>
+                <div class="craft-dd-col">
+                  <div class="craft-dd-group-title">STAMPS, SIGN &amp; SECURITY</div>
+                  <button type="button" class="craft-dd-item tool-btn" data-tool="stamp"><span class="dd-ico" style="color:#10b981">🔖</span>Place Engineering Stamp</button>
+                  <button type="button" class="craft-dd-item" data-open-sign="1"><span class="dd-ico" style="color:#a855f7">✒</span>Electronic Signature (Draw / Type / Upload)</button>
+                  <button type="button" class="craft-dd-item tool-btn" data-tool="redact"><span class="dd-ico" style="color:#ef4444">█</span>Redact / Blackout Area</button>
+                  <button type="button" class="craft-dd-item" onclick="document.querySelector('.sidebar-tabs .tab-btn[data-tab=&quot;markups&quot;]')?.click()"><span class="dd-ico" style="color:#60a5fa">📋</span>View All Markups &amp; Annotations</button>
+                </div>
+              </div>
+            </div>
+
             <!-- 2. Edit -->
             <div class="craft-dd-wrap">
               <button type="button" class="craft-top-tab" data-top-cat="edit">Edit <span class="dd-caret">▾</span></button>
